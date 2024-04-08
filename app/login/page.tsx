@@ -1,8 +1,8 @@
+"use client";
 
 import FormButton from "@/components/form-btn";
 import FormInput from "@/components/form-input";
 import SocialLogin from "@/components/social-login";
-import {redirect} from "next/navigation";
 import {handleForm} from "@/app/login/actions";
 import { useFormState } from "react-dom";
 export default function LogIn() {
@@ -28,14 +28,14 @@ export default function LogIn() {
                     type="email"
                     placeholder="Email"
                     required
-                    errors={[]}
+
                 />
                 <FormInput
                     name="password"
                     type="password"
                     placeholder="Password"
                     required
-                    errors={[]}
+                    errors={state?.errors ?? []}
                 />
                 <FormButton   text="Log in"/>
             </form>
