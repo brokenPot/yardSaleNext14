@@ -1,0 +1,196 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id              Int           @id @default(autoincrement())
+  phone           String?       @unique
+  email           String?       @unique
+  name            String
+  avatar          String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  introduce       String?
+  tokens          Token[]
+  products        Product[]
+  posts           Post[]
+  answer          Answer[]
+  wonderings      Wondering[]
+  writtenReviews  Review[]      @relation("writtenReviews")
+  receivedReviews Review[]      @relation("receivedReviews")
+  record          Record[]
+  streams         Stream[]
+  messages        Message[]
+  buyerChat       Chatroom[]    @relation("buyer")
+  sellerChat      Chatroom[]    @relation("seller")
+  chatMessages    ChatMessage[]
+}
+
+model Token {
+  id        Int      @id @default(autoincrement())
+  payload   String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Product {
+  id          Int        @id @default(autoincrement())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  userId      Int
+  image       String
+  name        String
+  price       Int
+  description String     @db.MediumText
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  records     Record[]
+  chatrooms   Chatroom[]
+
+  @@index([userId])
+}
+
+model Post {
+  id         Int         @id @default(autoincrement())
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  userId     Int
+  question   String      @db.MediumText
+  latitude   Float?
+  longitude  Float?
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers    Answer[]
+  wonderings Wondering[]
+
+  @@index([userId])
+}
+
+model Answer {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
+  postId    Int
+  answer    String   @db.MediumText
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([postId])
+}
+
+model Wondering {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
+  postId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([postId])
+}
+
+model Review {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  review       String   @db.MediumText
+  createdById  Int
+  createdForId Int
+  score        Int      @default(1)
+  createdBy    User     @relation("writtenReviews", fields: [createdById], references: [id], onDelete: Cascade)
+  createdFor   User     @relation("receivedReviews", fields: [createdForId], references: [id], onDelete: Cascade)
+
+  @@index([createdById])
+  @@index([createdForId])
+}
+
+model Record {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  createdAt DateTime @default(now())
+  kind      Kind
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([productId])
+}
+
+model Stream {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  name        String
+  description String    @db.MediumText
+  price       Int
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages    Message[]
+
+  @@index([userId])
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
+  message   String   @db.MediumText
+  streamId  Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stream    Stream   @relation(fields: [streamId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([streamId])
+}
+
+model Chatroom {
+  id           Int           @id @default(autoincrement())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  productId    Int
+  buyerId      Int
+  sellerId     Int
+  product      Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  buyer        User          @relation("buyer", fields: [buyerId], references: [id], onDelete: Cascade)
+  seller       User          @relation("seller", fields: [sellerId], references: [id], onDelete: Cascade)
+  chatMessages ChatMessage[]
+
+  @@index([productId])
+  @@index([buyerId])
+  @@index([sellerId])
+}
+
+model ChatMessage {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     Int
+  message    String   @db.MediumText
+  chatroomId Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chatroom   Chatroom @relation(fields: [chatroomId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([chatroomId])
+}
+
+enum Kind {
+  Purchase
+  Sale
+  Fav
+}

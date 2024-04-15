@@ -1,10 +1,11 @@
 "use client";
 
-import FormInput from "@/components/form-input";
-import FormButton from "@/components/form-btn";
+import Input from "@/components/input";
 import SocialLogin from "@/components/social-login";
 import { useFormState } from "react-dom";
 import { createAccount } from "./actions";
+import Button from "@/components/button";
+import { PASSWORD_MIN_LENGTH } from "@/app/lib/constants";
 
 export default function CreateAccount() {
     const [state, action] = useFormState(createAccount, null);
@@ -15,29 +16,33 @@ export default function CreateAccount() {
                 <h2 className="text-xl">Fill in the form below to join!</h2>
             </div>
             <form action={action} className="flex flex-col gap-3">
-                <FormInput
+                <Input
                     name="username"
                     type="text"
                     placeholder="Username"
                     required
                     errors={state?.fieldErrors.username}
+                    minLength={3}
+                    maxLength={10}
                 />
-                <FormInput name="email" type="email" placeholder="Email" required   errors={state?.fieldErrors.email} />
-                <FormInput
+                <Input name="email" type="email" placeholder="Email" required   errors={state?.fieldErrors.email} />
+                <Input
                     name="password"
                     type="password"
                     placeholder="Password"
                     required
                     errors={state?.fieldErrors.password}
+                    minLength={PASSWORD_MIN_LENGTH}
                 />
-                <FormInput
+                <Input
                     name="confirm_password"
                     type="password"
                     placeholder="Confirm Password"
                     required
                     errors={state?.fieldErrors.confirm_password}
+                    minLength={PASSWORD_MIN_LENGTH}
                 />
-                <FormButton   text="Create account" />
+                <Button text="Create account" />
             </form>
             <SocialLogin />
         </div>
