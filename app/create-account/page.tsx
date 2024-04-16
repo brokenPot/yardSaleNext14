@@ -17,11 +17,11 @@ export default function CreateAccount() {
             </div>
             <form action={action} className="flex flex-col gap-3">
                 <Input
-                    name="username"
+                    name="name"
                     type="text"
                     placeholder="Username"
                     required
-                    errors={state?.fieldErrors.username}
+                    errors={state?.fieldErrors.name}
                     minLength={3}
                     maxLength={10}
                 />

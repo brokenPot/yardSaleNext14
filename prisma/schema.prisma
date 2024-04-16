@@ -6,7 +6,7 @@ datasource db {
   provider          = "mysql"
   url               = env("DATABASE_URL")
   relationMode      = "prisma"
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  // shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 // 주석 처리 된 키 삽입하는 것 보류 
@@ -16,7 +16,7 @@ model User {
   email           String?       @unique
   password        String?
   github_id       String?       @unique
-  name            String
+  name            String        @unique
   avatar          String?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
