@@ -1,10 +1,10 @@
 "use server";
 import bcrypt from "bcrypt";
-import {
-    PASSWORD_MIN_LENGTH,
-    PASSWORD_REGEX,
-    PASSWORD_REGEX_ERROR,
-} from "@/lib/constants";
+// import {
+//     PASSWORD_MIN_LENGTH,
+//     PASSWORD_REGEX,
+//     PASSWORD_REGEX_ERROR,
+// } from "@/lib/constants";
 import db from "@/lib/db";
 import { z } from "zod";
 import getSession from "@/lib/session";
@@ -66,6 +66,7 @@ export async function logIn(prevState: any, formData: FormData) {
         if (ok) {
             const session = await getSession();
             session.id = user!.id;
+            await session.save();
             redirect("/profile");
         } else {
             return {
