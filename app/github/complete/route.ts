@@ -4,14 +4,6 @@ import { notFound, redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 import {SessionSave} from "@/app/func/SessionSave";
 
-const getAccessToken = ()=>{
-
-}
-
-const getGithubProfile= ()=>{
-
-}
-
 export async function GET(request: NextRequest) {
     const code = request.nextUrl.searchParams.get("code");
     if (!code) {
@@ -47,8 +39,10 @@ export async function GET(request: NextRequest) {
         },
         cache: "no-cache",
     });
-    console.log(userEmailResponse.json())
-    console.log(userProfileResponse.json())
+
+
+    // console.log("이메일입니다 : ", userEmailResponse.json())
+    // console.log(userProfileResponse.json())
     const { id, avatar_url, login } = await userProfileResponse.json();
     const user = await db.user.findUnique({
         where: {
@@ -68,7 +62,7 @@ export async function GET(request: NextRequest) {
     }
     const newUser = await db.user.create({
         data: {
-            name: `${login}-ghUser`,
+            name: login,
             github_id: id + "",
             avatar: avatar_url,
         },
@@ -81,8 +75,8 @@ export async function GET(request: NextRequest) {
     await session.save();
 
     // SessionSave(newUser)
-
     return redirect("/profile");
+
 }
 
 // const sessionSave = async (userdata:any)=>{
