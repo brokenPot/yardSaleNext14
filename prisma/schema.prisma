@@ -6,7 +6,7 @@ datasource db {
   provider          = "mysql"
   url               = env("DATABASE_URL")
   relationMode      = "prisma"
-  // shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 // 주석 처리 된 키 삽입하는 것 보류 
@@ -28,13 +28,13 @@ model User {
   wonderings      Wondering[]
   writtenReviews  Review[]      @relation("writtenReviews")
   receivedReviews Review[]      @relation("receivedReviews")
-  record          Record[]
+  // record          Record[]
   streams         Stream[]
   messages        Message[]
-  buyerChat       Chatroom[]    @relation("buyer")
-  sellerChat      Chatroom[]    @relation("seller")
-  chatMessages    ChatMessage[]
-  SMSToken        SMSToken[]
+  // buyerChat       Chatroom[]    @relation("buyer")
+  // sellerChat      Chatroom[]    @relation("seller")
+  // chatMessages    ChatMessage[]
+  // SMSToken        SMSToken[]
 }
 
 model Token {
@@ -48,32 +48,46 @@ model Token {
   @@index([userId])
 }
 
-model SMSToken {
-  id         Int      @id @default(autoincrement())
-  token      String   @unique
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+// model SMSToken {
+//   id         Int      @id @default(autoincrement())
+//   token      String   @unique
+//   created_at DateTime @default(now())
+//   updated_at DateTime @updatedAt
+//   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   userId     Int
+//
+//   @@index([userId])
+// }
+
+model Product {
+  id          Int    @id @default(autoincrement())
+  title       String
+  price       Float
+  image       String
+  description String @db.MediumText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
 
   @@index([userId])
 }
 
-model Product {
-  id          Int        @id @default(autoincrement())
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  userId      Int
-  image       String
-  name        String
-  price       Int
-  description String     @db.MediumText
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  records     Record[]
-  chatrooms   Chatroom[]
 
-  @@index([userId])
-}
+// model Product {
+//   id          Int        @id @default(autoincrement())
+//   title       String
+//   price       Int
+//   image       String
+//   description String?     @db.MediumText
+//   createdAt   DateTime   @default(now())
+//   updatedAt   DateTime   @updatedAt
+//   userId      Int
+//   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   records     Record[]
+//   chatrooms   Chatroom[]
+//   @@index([userId])
+// }
 
 model Post {
   id         Int         @id @default(autoincrement())
@@ -132,19 +146,19 @@ model Review {
   @@index([createdForId])
 }
 
-model Record {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  productId Int
-  createdAt DateTime @default(now())
-  kind      Kind
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([productId])
-}
+// model Record {
+//   id        Int      @id @default(autoincrement())
+//   userId    Int
+//   productId Int
+//   createdAt DateTime @default(now())
+//   kind      Kind
+//   updatedAt DateTime @updatedAt
+//   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+//
+//   @@index([userId])
+//   @@index([productId])
+// }
 
 model Stream {
   id          Int       @id @default(autoincrement())
@@ -174,36 +188,36 @@ model Message {
   @@index([streamId])
 }
 
-model Chatroom {
-  id           Int           @id @default(autoincrement())
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  productId    Int
-  buyerId      Int
-  sellerId     Int
-  product      Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
-  buyer        User          @relation("buyer", fields: [buyerId], references: [id], onDelete: Cascade)
-  seller       User          @relation("seller", fields: [sellerId], references: [id], onDelete: Cascade)
-  chatMessages ChatMessage[]
+// model Chatroom {
+//   id           Int           @id @default(autoincrement())
+//   createdAt    DateTime      @default(now())
+//   updatedAt    DateTime      @updatedAt
+//   productId    Int
+//   buyerId      Int
+//   sellerId     Int
+//   product      Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+//   buyer        User          @relation("buyer", fields: [buyerId], references: [id], onDelete: Cascade)
+//   seller       User          @relation("seller", fields: [sellerId], references: [id], onDelete: Cascade)
+//   chatMessages ChatMessage[]
+//
+//   @@index([productId])
+//   @@index([buyerId])
+//   @@index([sellerId])
+// }
 
-  @@index([productId])
-  @@index([buyerId])
-  @@index([sellerId])
-}
-
-model ChatMessage {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  userId     Int
-  message    String   @db.MediumText
-  chatroomId Int
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  chatroom   Chatroom @relation(fields: [chatroomId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([chatroomId])
-}
+// model ChatMessage {
+//   id         Int      @id @default(autoincrement())
+//   createdAt  DateTime @default(now())
+//   updatedAt  DateTime @updatedAt
+//   userId     Int
+//   message    String   @db.MediumText
+//   chatroomId Int
+//   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   chatroom   Chatroom @relation(fields: [chatroomId], references: [id], onDelete: Cascade)
+//
+//   @@index([userId])
+//   @@index([chatroomId])
+// }
 
 enum Kind {
   Purchase
