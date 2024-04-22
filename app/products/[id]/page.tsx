@@ -41,7 +41,7 @@ export default async function ProductDetail({
         return notFound();
     }
     const product = await getProduct(id);
-    console.log(product)
+    // console.log(product)
     if (!product) {
         return notFound();
     }
@@ -49,7 +49,12 @@ export default async function ProductDetail({
     return (
         <div>
             <div className="relative aspect-square">
-                <Image fill src={product.image} alt={product.title} />
+                <Image
+                    className="object-cover"
+                    fill
+                    src={product.image}
+                    alt={product.title}
+                />
             </div>
             <div className="p-5 flex items-center gap-3 border-b border-neutral-700">
                 <div className="size-10 overflow-hidden rounded-full">
