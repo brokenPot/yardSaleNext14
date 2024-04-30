@@ -7,7 +7,6 @@ import {FormEvent, useState} from "react";
 import { uploadProduct } from "./actions";
 import {MB, PLZ_ADD_PHOTO} from "@/lib/constants";
 import { useFormState } from "react-dom";
-import {typeToFlattenedError} from "zod";
 export default function AddProduct() {
     const [preview, setPreview] = useState("");
 
@@ -22,9 +21,6 @@ export default function AddProduct() {
         const {
             target: { files },
         } = event;
-        if (!files) {
-            return;
-        }
         if (!files) return;
         const file = files[0];
         if (isOversizeImage(file)) return; // 파일 용량 체크
