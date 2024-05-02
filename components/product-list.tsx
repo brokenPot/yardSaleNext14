@@ -64,7 +64,7 @@ export default function ProductList({ initialProducts }: ProductListProps) {
             {products.map((product:any) => (
                 <ListProduct key={product.id} {...product} />
             ))}
-            {!isLastPage ? (
+            {/*{!isLastPage ? () : null}* */}
                 <span
                     ref={trigger}
                     style={{
@@ -74,7 +74,6 @@ export default function ProductList({ initialProducts }: ProductListProps) {
                 >
                     {isLoading ? "로딩 중" : "Load more"}
         </span>
-            ) : null}
         </div>
     );
 }
