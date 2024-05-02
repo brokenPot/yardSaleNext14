@@ -3,6 +3,7 @@ import db from "@/lib/db";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { Prisma } from "@prisma/client";
 import Link from "next/link";
+import {  revalidatePath } from "next/cache";
 
 async function getInitialProducts() {
     const products = await db.product.findMany({
@@ -25,6 +26,10 @@ export type InitialProducts = Prisma.PromiseReturnType<
 >;
 export default async function Products() {
     const initialProducts = await getInitialProducts();
+    const revalidate = async () => {
+        "use server";
+        revalidatePath("/home");
+    };
     return (
         <div>
             <ProductList initialProducts={initialProducts} />
@@ -33,6 +38,7 @@ export default async function Products() {
                 className="bg-orange-500 flex items-center justify-center rounded-full size-16 fixed bottom-24 right-8 text-white transition-colors hover:bg-orange-400"
             >
                 <PlusIcon className="size-10" />
-            </Link>        </div>
+            </Link>
+        </div>
     );
 }
