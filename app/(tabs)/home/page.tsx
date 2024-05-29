@@ -5,7 +5,7 @@ import { Prisma } from "@prisma/client";
 import {unstable_cache as nextCache,  revalidatePath } from "next/cache";
 import Link from "next/link";
 
-const getCachedProducts = nextCache(getInitialProducts, ["home-products"]); // 60초가 지난후 새로운 요청이 있다면 재 호출
+// const getCachedProducts = nextCache(getInitialProducts, ["home-products"]); // 60초가 지난후 새로운 요청이 있다면 재 호출
 async function getInitialProducts() {
     console.log('!!!')
     const products = await db.product.findMany({
@@ -32,7 +32,7 @@ export const metadata = {
 
 
 // export const dynamic = "force-dynamic";
-export const revalidate = 60;
+// export const revalidate = 60;
 
 export default async function Products() {
     const initialProducts = await getInitialProducts();

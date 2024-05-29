@@ -1,5 +1,5 @@
 import db from "@/lib/db";
-import getSession from "@/lib/session";
+// import getSession from "@/lib/session";
 import { formatToWon } from "@/lib/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
@@ -11,10 +11,10 @@ import {
 } from "next/cache";
 
 async function getIsOwner(userId: number) {
-    const session = await getSession();
-    if (session.id) {
-        return session.id === userId;
-    }
+    // const session = await getSession();
+    // if (session.id) {
+    //     return session.id === userId;
+    // }
     return false;
 }
 
@@ -41,7 +41,6 @@ const getCachedProduct = nextCache(getProduct, ["product-detail"], {
 });
 
 async function getProductTitle(id: number) {
-    console.log("title");
     const product = await db.product.findUnique({
         where: {
             id,
@@ -133,4 +132,13 @@ export default async function ProductDetail({
             </div>
         </div>
     );
+}
+
+export async function generateStaticParams() {
+    const products = await db.product.findMany({
+        select: {
+            id: true,
+        },
+    });
+    return products.map((product) => ({ id: product.id + "" }));
 }
