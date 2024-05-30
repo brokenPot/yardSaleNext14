@@ -89,6 +89,8 @@ export default async function ProductDetail({
                     fill
                     src={product.image}
                     alt={product.title}
+                    sizes="40vw"
+                    priority
                 />
             </div>
             <div className="p-5 flex items-center gap-3 border-b border-neutral-700">

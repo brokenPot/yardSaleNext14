@@ -3,12 +3,22 @@
 import Button from "@/components/button";
 import Input from "@/components/input";
 import { PhotoIcon,ArrowPathIcon } from "@heroicons/react/24/solid";
-import {FormEvent, useState} from "react";
+import {FormEvent, useEffect, useState} from "react";
 import { uploadProduct } from "./actions";
 import {MB, PLZ_ADD_PHOTO} from "@/lib/constants";
 import { useFormState } from "react-dom";
+
 export default function AddProduct() {
     const [preview, setPreview] = useState("");
+    // const router = useRouter();
+
+    // useEffect(() => {
+    //     console.log('AddProduct component mounted');
+    //     return () => {
+    //         console.log('AddProduct component unmounted');
+    //     };
+    // }, []);
+
 
     const isOversizeImage = (file: File): boolean => {
         if (file.size > 2 * MB) {

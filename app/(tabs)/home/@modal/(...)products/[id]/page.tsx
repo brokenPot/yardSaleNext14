@@ -1,4 +1,3 @@
-import { PhotoIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import ModalBtn from "@/components/modal-btn";
 import {notFound} from "next/navigation";
 import PrismaDB from "@/lib/db";
@@ -51,6 +50,9 @@ export default async function Modal({ params }: { params: { id: string } }) {
                 </div>
                 <div>
                     {product.description}
+                </div>
+                <div>
+                    press refresh if you wanna see more detail!
                 </div>
             </div>
         </div>

@@ -7,7 +7,6 @@ import Link from "next/link";
 
 // const getCachedProducts = nextCache(getInitialProducts, ["home-products"]); // 60초가 지난후 새로운 요청이 있다면 재 호출
 async function getInitialProducts() {
-    console.log('!!!')
     const products = await db.product.findMany({
         select: {
             title: true,
@@ -43,11 +42,11 @@ export default async function Products() {
     return (
         <div>
             <ProductList initialProducts={initialProducts}/>
-            <form action={revalidate}>
-                <button>Revalidate</button>
-            </form>
+            {/*<form action={revalidate}>*/}
+            {/*    <button>Revalidate</button>*/}
+            {/*</form>*/}
             <Link
-                href="/products/add"
+                href="/product/add"
                 className="bg-orange-500 flex items-center justify-center rounded-full size-16 fixed bottom-24 right-8 text-white transition-colors hover:bg-orange-400"
             >
                 <PlusIcon className="size-10"/>
