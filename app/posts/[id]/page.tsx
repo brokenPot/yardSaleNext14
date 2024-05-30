@@ -1,64 +1,131 @@
 import db from "@/lib/db";
+import getSession from "@/lib/session";
 import { formatToTimeAgo } from "@/lib/utils";
-import {
-    ChatBubbleBottomCenterIcon,
-    HandThumbUpIcon,
-} from "@heroicons/react/24/outline";
-import Link from "next/link";
+import { EyeIcon, HandThumbUpIcon } from "@heroicons/react/24/solid";
+import { revalidatePath } from "next/cache";
+import Image from "next/image";
+import { notFound } from "next/navigation";
 
-async function getPosts() {
-    const posts = await db.post.findMany({
-        select: {
-            id: true,
-            title: true,
-            description: true,
-            views: true,
-            created_at: true,
-            _count: {
-                select: {
-                    comments: true,
-                    likes: true,
+async function getPost(id: number) {
+    try {
+        const post = await db.post.update({
+            where: {
+                id,
+            },
+            data: {
+                views: {
+                    increment: 1,
                 },
+            },
+            include: {
+                user: {
+                    select: {
+                        name: true,
+                        avatar: true,
+                    },
+                },
+                _count: {
+                    select: {
+                        comments: true,
+                        likes: true,
+                    },
+                },
+            },
+        });
+        return post;
+    } catch (e) {
+        return null;
+    }
+}
+
+async function getIsLiked(postId: number) {
+    const session = await getSession();
+    const like = await db.like.findUnique({
+        where: {
+            id: {
+                postId,
+                userId: session.id!,
             },
         },
     });
-    return posts;
+    return Boolean(like);
 }
 
-export const metadata = {
-    title: "동네생활",
-};
-
-export default async function Life() {
-    const posts = await getPosts();
-    return (    <div className="p-5 flex flex-col">
-            {posts.map((post) => (
-                <Link
-                    key={post.id}
-                    href={`/posts/${post.id}`}
-                    className="pb-5 mb-5 border-b border-neutral-500 text-neutral-400 flex  flex-col gap-2 last:pb-0 last:border-b-0"
-                >
-                    <h2 className="text-white text-lg font-semibold">{post.title}</h2>
-                    <p>{post.description}</p>
-                    <div className="flex items-center justify-between text-sm">
-                        <div className="flex gap-4 items-center">
-                            <span>{formatToTimeAgo(post.created_at.toString())}</span>
-                            <span>·</span>
-                            <span>조회 {post.views}</span>
-                        </div>
-                        <div className="flex gap-4 items-center *:flex *:gap-1 *:items-center">
-              <span>
-                <HandThumbUpIcon className="size-4" />
-                  {post._count.likes}
-              </span>
-                            <span>
-                <ChatBubbleBottomCenterIcon className="size-4" />
-                                {post._count.comments}
-              </span>
-                        </div>
+export default async function PostDetail({
+                                             params,
+                                         }: {
+    params: { id: string };
+}) {
+    const id = Number(params.id);
+    if (isNaN(id)) {
+        return notFound();
+    }
+    const post = await getPost(id);
+    if (!post) {
+        return notFound();
+    }
+    const likePost = async () => {
+        "use server";
+        const session = await getSession();
+        try {
+            await db.like.create({
+                data: {
+                    postId: id,
+                    userId: session.id!,
+                },
+            });
+            revalidatePath(`/post/${id}`);
+        } catch (e) {}
+    };
+    const dislikePost = async () => {
+        "use server";
+        try {
+            const session = await getSession();
+            await db.like.delete({
+                where: {
+                    id: {
+                        postId: id,
+                        userId: session.id!,
+                    },
+                },
+            });
+            revalidatePath(`/post/${id}`);
+        } catch (e) {}
+    };
+    const isLiked = await getIsLiked(id);
+    return (
+        <div className="p-5 text-white">
+            <div className="flex items-center gap-2 mb-2">
+                <Image
+                    width={28}
+                    height={28}
+                    className="size-7 rounded-full"
+                    src={post.user.avatar!}
+                    alt={post.user.name}
+                />
+                <div>
+                    <span className="text-sm font-semibold">{post.user.name}</span>
+                    <div className="text-xs">
+                        <span>{formatToTimeAgo(post.created_at.toString())}</span>
                     </div>
-                </Link>
-            ))}
+                </div>
+            </div>
+            <h2 className="text-lg font-semibold">{post.title}</h2>
+            <p className="mb-5">{post.description}</p>
+            <div className="flex flex-col gap-5 items-start">
+                <div className="flex items-center gap-2 text-neutral-400 text-sm">
+                    <EyeIcon className="size-5" />
+                    <span>조회 {post.views}</span>
+                </div>
+                <form action={isLiked ? dislikePost : likePost}>
+                    <button
+                        className={`flex items-center gap-2 text-neutral-400 text-sm border border-neutral-400 rounded-full p-2 hover:bg-neutral-800 transition-colors`}
+                    >
+                        <HandThumbUpIcon className="size-5" />
+                        <span>공감하기 ({post._count.likes})</span>
+                    </button>
+                </form>
+            </div>
         </div>
     );
 }
