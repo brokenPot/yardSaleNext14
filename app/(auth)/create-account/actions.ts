@@ -84,6 +84,7 @@ export async function createAccount(prevState: any, formData: FormData) {
         password: formData.get("password"),
         confirm_password: formData.get("confirm_password"),
     };
+    // console.log(data)
     const result = await formSchema.spa(data);
     if (!result.success) {
         return result.error.flatten();
@@ -103,6 +104,7 @@ export async function createAccount(prevState: any, formData: FormData) {
             cookieName: "yard-sale",
             password: process.env.COOKIE_PASSWORD!,
         });
+        // console.log(user)
         //@ts-ignore
         cookie.id = user.id;
         await cookie.save();
