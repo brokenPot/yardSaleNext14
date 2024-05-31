@@ -5,12 +5,10 @@ import {
 } from "@/lib/constants";
 import db from "@/lib/db";
 import { z } from "zod";
-import { getIronSession } from "iron-session";
-import { cookies } from "next/headers";
+import getSession from "@/lib/session";
+import {redirect} from "next/navigation";
 
-import sessionSave from "@/lib/sessionSave";
-
-const checkUsername = (name: string) => !name.includes("potato");
+const checkUsername = (name: string) => !name.includes("dumb");
 
 const checkPasswords = ({
                             password,
@@ -84,7 +82,6 @@ export async function createAccount(prevState: any, formData: FormData) {
         password: formData.get("password"),
         confirm_password: formData.get("confirm_password"),
     };
-    // console.log(data)
     const result = await formSchema.spa(data);
     if (!result.success) {
         return result.error.flatten();
@@ -100,14 +97,16 @@ export async function createAccount(prevState: any, formData: FormData) {
                 id: true,
             },
         });
-        const cookie = await getIronSession(cookies(), {
-            cookieName: "yard-sale",
-            password: process.env.COOKIE_PASSWORD!,
-        });
-        // console.log(user)
-        //@ts-ignore
-        cookie.id = user.id;
-        await cookie.save();
-        await sessionSave(user.id)
+        // const cookie = await getIronSession(cookies(), {
+        //     cookieName: "yard-sale",
+        //     password: process.env.COOKIE_PASSWORD!,
+        // });
+        const session = await getSession();
+
+        session.id = user.id;
+        await session.save();
+        redirect("/profile");
+
+        // await sessionSave(user.id)
     }
 }

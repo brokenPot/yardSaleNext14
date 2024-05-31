@@ -5,6 +5,8 @@ import { z } from "zod";
 
 
 import sessionSave from "@/lib/sessionSave";
+import {redirect} from "next/navigation";
+import getSession from "@/lib/session";
 
 const checkEmailExists = async (email: string) => {
     const user = await db.user.findUnique({
@@ -57,7 +59,11 @@ export async function logIn(prevState: any, formData: FormData) {
             result.data.password,
             user!.password ?? "xxxx"
         );
-        if (ok) {            await sessionSave(user!.id);
+        if (ok) {
+            const session = await getSession();
+            session.id = user!.id;
+            await session.save();
+            redirect("/profile");
         } else {
             return {
                 fieldErrors: {
