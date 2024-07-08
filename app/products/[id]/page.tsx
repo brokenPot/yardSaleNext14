@@ -82,7 +82,17 @@ export default async function ProductDetail({
         revalidateTag("xxxx");
     };
     return (
-        <div className="pb-40">
+        <div className="pt-20 pb-40 relative">
+            <div
+                className="fixed top-0 p-5  w-full bg-neutral-800  flex justify-items-start align-middle max-w-screen-sm z-50">
+                <Link
+                    className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold z-1"
+                    href={`/home`}
+                >
+                    뒤로가기
+                </Link>
+            </div>
+
             <div className="relative aspect-square">
                 <Image
                     className="object-cover"
@@ -103,7 +113,7 @@ export default async function ProductDetail({
                             alt={product.user.name}
                         />
                     ) : (
-                        <UserIcon />
+                        <UserIcon/>
                     )}
                 </div>
                 <div>
@@ -114,7 +124,8 @@ export default async function ProductDetail({
                 <h1 className="text-2xl font-semibold">{product.title}</h1>
                 <p>{product.description}</p>
             </div>
-            <div className="fixed w-full bottom-0  p-5 pb-10 bg-neutral-800 flex justify-between items-center max-w-screen-sm">
+            <div
+                className="fixed w-full bottom-0  p-5 pb-10 bg-neutral-800 flex justify-between items-center max-w-screen-sm">
         <span className="font-semibold text-xl">
           {formatToWon(product.price)}원
         </span>
@@ -125,6 +136,7 @@ export default async function ProductDetail({
                         </button>
                     </form>
                 ) : null}
+
                 <Link
                     className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold"
                     href={``}
