@@ -7,18 +7,12 @@ import {FormEvent, useEffect, useState} from "react";
 import { uploadProduct } from "./actions";
 import {MB, PLZ_ADD_PHOTO} from "@/lib/constants";
 import { useFormState } from "react-dom";
+import ProductAddBtn from "@/components/productAddBtn";
+import { useRouter } from "next/navigation";
 
 export default function AddProduct() {
+    const router = useRouter();
     const [preview, setPreview] = useState("");
-    // const router = useRouter();
-
-    // useEffect(() => {
-    //     console.log('AddProduct component mounted');
-    //     return () => {
-    //         console.log('AddProduct component unmounted');
-    //     };
-    // }, []);
-
 
     const isOversizeImage = (file: File): boolean => {
         if (file.size > 2 * MB) {
@@ -99,17 +93,14 @@ export default function AddProduct() {
                     errors={state?.fieldErrors.description}
                 />
                 <div className="flex gap-2 mx-auto">
-                    <Button type="submit">작성완료</Button>
-                    <Button
+                    <ProductAddBtn type="submit" text={'작성완료'}/>
+                    <ProductAddBtn
                         type="reset"
                         onClick={reset}
                         icon={<ArrowPathIcon className="size-4 text-white"/>}
-                    >
-                        초기화
-                    </Button>
-                    <Button type="button" href="/products">
-                        돌아가기
-                    </Button>
+                        text={'초기화'}
+                    />
+                    <ProductAddBtn type="button" href="/products" text={'돌아가기'} onClick={() => router.push("/")}/>
                 </div>
             </form>
         </div>

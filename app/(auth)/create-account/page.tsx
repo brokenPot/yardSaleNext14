@@ -9,7 +9,6 @@ import { PASSWORD_MIN_LENGTH } from "@/lib/constants";
 
 export default function CreateAccount() {
     const [state, dispatch] = useFormState(createAccount, null);
-    console.log(state)
     return (
         <div className="flex flex-col gap-10 py-8 px-6">
             <div className="flex flex-col gap-2 *:font-medium">
@@ -43,7 +42,7 @@ export default function CreateAccount() {
                     errors={state?.fieldErrors.confirm_password}
                     minLength={PASSWORD_MIN_LENGTH}
                 />
-                <Button>Create account</Button>
+                <Button text={'Create account'} />
             </form>
             <SocialLogin />
         </div>
