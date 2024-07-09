@@ -13,7 +13,6 @@ export async function uploadProduct(_: any,  formData: FormData) {
         price: formData.get("price"),
         description: formData.get("description"),
     };
-    console.log(data)
     if (data.photo instanceof File) {
         const photoData = await data.photo.arrayBuffer();
         await fs.appendFile(`./public/${data.photo.name}`, Buffer.from(photoData));
