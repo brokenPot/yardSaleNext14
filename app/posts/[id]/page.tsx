@@ -4,9 +4,12 @@ import { formatToTimeAgo } from "@/lib/utils";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { unstable_cache as nextCache, revalidateTag } from "next/cache";
+import { unstable_cache as nextCache } from "next/cache";
 import dog from "@/public/dog.jpg"
 import LikeButton from "@/components/like-button";
+import {getComments} from "@/app/posts/[id]/actions";
+import {CommentList} from "@/components/commentList";
+
 async function getPost(id: number) {
     try {
         const post = await db.post.update({
@@ -37,6 +40,29 @@ async function getPost(id: number) {
     }
 }
 
+function getCachedComments(postId: number) {
+    const cachedComments = nextCache(getComments, ["comments"], {
+        tags: [`comments-${postId}`],
+    });
+    return cachedComments(postId);
+}
+
+async function getMe() {
+    const mySession = await getSession();
+    const me = mySession.id
+        ? await db.user.findUnique({
+            where: {
+                id: mySession.id,
+            },
+            select: {
+                id: true,
+                avatar: true,
+                name: true,
+            },
+        })
+        : null;
+    return me;
+}
 
 const getCachedPost = nextCache(getPost, ["post-detail"], {
     tags: ["post-detail"],
@@ -85,6 +111,9 @@ export default async function PostDetail({params,}: {
     }
 
     const { likeCount, isLiked } = await getCachedLikeStatus(id);
+    const allComments = await getCachedComments(post.id);
+    const me = await getMe();
+    const session = await getSession();
 
     return (
         <div className="p-5 text-white">
@@ -111,6 +140,7 @@ export default async function PostDetail({params,}: {
                     <span>조회 {post.views}</span>
                 </div>
                 <LikeButton isLiked={isLiked} likeCount={likeCount} postId={id} />
+                <CommentList postId={post.id} sessionId={session.id!} allComments={allComments} me={me} />
             </div>
         </div>
     );
