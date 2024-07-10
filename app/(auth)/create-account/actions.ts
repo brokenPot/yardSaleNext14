@@ -34,6 +34,8 @@ const formSchema = z
         confirm_password: z.string().min(PASSWORD_MIN_LENGTH),
     })
     // 이름 중복 체크
+    // 일반 refine과는 다르게 superRefine은 이후 검사를 중단시키고 반환.
+    // DB를 불필요하게 불러오는 경우를 예방 가능하다.
     .superRefine(async ({ name }, ctx) => {
         const user = await db.user.findUnique({
             where: {

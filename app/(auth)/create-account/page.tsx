@@ -9,6 +9,7 @@ import FormButton from "@/components/form-btn";
 
 export default function CreateAccount() {
     const [state, dispatch] = useFormState(createAccount, null);
+    console.log(state)
     return (
         <div className="flex flex-col gap-10 py-8 px-6">
             <div className="flex flex-col gap-2 *:font-medium">
