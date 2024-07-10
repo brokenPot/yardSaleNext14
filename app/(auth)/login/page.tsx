@@ -6,7 +6,6 @@ import SocialLogin from "@/components/social-login";
 import { useFormState } from "react-dom";
 import { logIn } from "./actions";
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants";
-import Button from "@/components/button";
 
 export default function LogIn() {
   const [state, dispatch] = useFormState(logIn, null);
@@ -32,7 +31,7 @@ export default function LogIn() {
           minLength={PASSWORD_MIN_LENGTH}
           errors={state?.fieldErrors.password}
         />
-          <Button text={"Log in"}/>
+          <FormButton text={"Log in"}/>
       </form>
       <SocialLogin />
     </div>

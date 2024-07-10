@@ -1,9 +1,8 @@
 "use client";
 
-import Button from "@/components/button";
 import Input from "@/components/input";
 import { PhotoIcon,ArrowPathIcon } from "@heroicons/react/24/solid";
-import {FormEvent, useEffect, useState} from "react";
+import {FormEvent,  useState} from "react";
 import { uploadProduct } from "./actions";
 import {MB, PLZ_ADD_PHOTO} from "@/lib/constants";
 import { useFormState } from "react-dom";

@@ -6,6 +6,7 @@ import { z } from "zod";
 
 import {redirect} from "next/navigation";
 import getSession from "@/lib/session";
+import {PASSWORD_MIN_LENGTH, PASSWORD_REGEX, PASSWORD_REGEX_ERROR} from "@/lib/constants";
 
 const checkEmailExists = async (email: string) => {
     const user = await db.user.findUnique({
@@ -31,10 +32,12 @@ const formSchema = z.object({
         .refine(checkEmailExists, "An account with this email does not exist."),
     password: z.string({
         required_error: "Password is required",
-    }),
-    // .min(PASSWORD_MIN_LENGTH),
-    // .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
+    })
+     .min(PASSWORD_MIN_LENGTH)
+     .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
 });
+
+// 비동기 함수
 export async function logIn(prevState: any, formData: FormData) {
     const data = {
         email: formData.get("email"),
@@ -42,6 +45,7 @@ export async function logIn(prevState: any, formData: FormData) {
     };
     const result = await formSchema.spa(data);
     if (!result.success) {
+        // flatten()은 에러 메세지 반환을 보기 좋게 만들어준다.
         return result.error.flatten();
     } else {
         const user = await db.user.findUnique({
@@ -55,7 +59,7 @@ export async function logIn(prevState: any, formData: FormData) {
         });
         const ok = await bcrypt.compare(
             result.data.password,
-            user!.password ?? "xxxx"
+            user!.password ?? "xxxx" // 패스워드가 없는 경우
         );
         if (ok) {
             const session = await getSession();

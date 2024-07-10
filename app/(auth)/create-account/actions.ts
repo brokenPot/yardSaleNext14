@@ -1,7 +1,7 @@
 "use server";
 import bcrypt from "bcrypt";
 import {
-    PASSWORD_MIN_LENGTH,
+    PASSWORD_MIN_LENGTH, PASSWORD_REGEX, PASSWORD_REGEX_ERROR,
 } from "@/lib/constants";
 import db from "@/lib/db";
 import { z } from "zod";
@@ -27,12 +27,13 @@ const formSchema = z
             })
             .toLowerCase()
             .trim()
-            .refine(checkUsername, "No potatoes allowed!"),
+            .refine(checkUsername, "No dumbs allowed!"),
         email: z.string().email().toLowerCase(),
-        password: z.string().min(PASSWORD_MIN_LENGTH),
-        //.regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
+        password: z.string().min(PASSWORD_MIN_LENGTH)
+        .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
         confirm_password: z.string().min(PASSWORD_MIN_LENGTH),
     })
+    // 이름 중복 체크
     .superRefine(async ({ name }, ctx) => {
         const user = await db.user.findUnique({
             where: {
@@ -52,6 +53,7 @@ const formSchema = z
             return z.NEVER;
         }
     })
+    // 이메일 중복 체크
     .superRefine(async ({ email }, ctx) => {
         const user = await db.user.findUnique({
             where: {
@@ -86,7 +88,9 @@ export async function createAccount(prevState: any, formData: FormData) {
     if (!result.success) {
         return result.error.flatten();
     } else {
-        const hashedPassword = await bcrypt.hash(result.data.password, 12);
+        // 계정 생성 성공시
+        // 비밀번호 암호화
+        const hashedPassword = await bcrypt.hash(result.data.password, 12); // 해싱 알고리즘 12번
         const user = await db.user.create({
             data: {
                 name: result.data.name,

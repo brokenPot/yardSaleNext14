@@ -1,9 +1,9 @@
 "use client";
 
-import Button from "@/components/button";
 import Input from "@/components/input";
 import { useFormState } from "react-dom";
 import { smsLogIn } from "./actions";
+import FormButton from "@/components/form-btn";
 
 const initialState = {
   token: false,
@@ -38,7 +38,7 @@ export default function SMSLogin() {
             errors={state.error?.formErrors}
           />
         )}
-          <Button  text={state.token ? "Verify Token" : "Send Verification SMS"} />
+          <FormButton  text={state.token ? "Verify Token" : "Send Verification SMS"} />
       </form>
     </div>
   );
