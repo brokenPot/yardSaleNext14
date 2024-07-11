@@ -2,6 +2,8 @@ import {Suspense} from "react";
 import {getUser, logOut} from "@/app/(tabs)/profile/actions";
 import Link from "next/link";
 import FormButton from "@/components/form-btn";
+import dog from "@/public/dog.jpg";
+import Image from "next/image";
 
 
 async function  MiniProfile() {
@@ -11,7 +13,14 @@ async function  MiniProfile() {
     return (
         <div className="flex justify-between items-center">
             <div className="flex items-center mt-4 space-x-3">
-                {user?.avatar ? null : (
+                {user?.avatar ?
+                    (<Image
+                        width={100}
+                        height={100}
+                        src={user.avatar }
+                        alt={user.name}
+                    />)
+                    : (
                     <div className="w-16 h-16 bg-slate-500 rounded-full"/>
                 )}
                 <div className="flex flex-col">
