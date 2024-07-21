@@ -1,24 +1,13 @@
 import ModalBtn from "@/components/modal-btn";
 import {notFound} from "next/navigation";
-import PrismaDB from "@/lib/db";
 import Image from "next/image";
+import {getProduct} from "@/app/(tabs)/home/@modal/(...)products/[id]/actions";
 export default async function Modal({ params }: { params: { id: string } }) {
     const id = +params.id;
     if (isNaN(id)) {
         return notFound();
     }
-
-    const product = await PrismaDB.product.findUnique({
-        where: {
-            id: id,
-        },
-        select: {
-            image: true,
-            title: true,
-            description:true,
-            user:true
-        },
-    });
+    const product = await getProduct(id);
 
     if (!product) {
         return notFound();

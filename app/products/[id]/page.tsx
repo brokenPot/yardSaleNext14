@@ -5,9 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-    unstable_cache as nextCache,
     revalidateTag,
 } from "next/cache";
+import {getCachedProduct, getCachedProductTitle} from "@/app/products/[id]/actions";
 
 async function getIsOwner(userId: number) {
     // const session = await getSession();
@@ -17,43 +17,6 @@ async function getIsOwner(userId: number) {
     return false;
 }
 
-async function getProduct(id: number) {
-    console.log("product");
-    const product = await db.product.findUnique({
-        where: {
-            id,
-        },
-        include: {
-            user: {
-                select: {
-                    name: true,
-                    avatar: true,
-                },
-            },
-        },
-    });
-    return product;
-}
-
-const getCachedProduct = nextCache(getProduct, ["product-detail"], {
-    tags: ["product-detail"],
-});
-
-async function getProductTitle(id: number) {
-    const product = await db.product.findUnique({
-        where: {
-            id,
-        },
-        select: {
-            title: true,
-        },
-    });
-    return product;
-}
-
-const getCachedProductTitle = nextCache(getProductTitle, ["product-title"], {
-    tags: ["product-title"],
-});
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
     const product = await getCachedProductTitle(Number(params.id));
