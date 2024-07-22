@@ -18,6 +18,7 @@ export const metadata = {
 // export const revalidate = 60;
 
 export default async function Products() {
+    // #13.3
     const initialProducts = await getInitialProducts();
     // const revalidate = async () => {
     //     "use server";
