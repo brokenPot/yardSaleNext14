@@ -11,7 +11,9 @@ export async function getMoreProducts(page: number) {
             image: true,
             id: true,
         },
+        // 숫자만큼 데이터 건너뛴다
         skip: page * 1,
+        // 가져오는 데이터 수
         take: 1,
         orderBy: {
             createdAt: "desc",
@@ -32,6 +34,10 @@ export async function getInitialProducts() {
             image: true,
             id: true,
         },
+        // 버튼형 로드를 위한 코드
+        take: 1,
+
+
         orderBy: {
             createdAt: "desc",
         },
