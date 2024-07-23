@@ -13,7 +13,7 @@ export const metadata = {
     title: "Home",
 };
 
-
+// 새로고침시 데이터베이스 자동 호출
 // export const dynamic = "force-dynamic";
 // export const revalidate = 60;
 

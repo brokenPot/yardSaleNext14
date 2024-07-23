@@ -22,8 +22,16 @@ export async function getMoreProducts(page: number) {
     return products;
 }
 
-// const getCachedProducts = nextCache(getInitialProducts, ["home-products"]); // 60초가 지난후 새로운 요청이 있다면 재 호출
-
+// const getCachedProducts = nextCache(getInitialProducts, ["home-products"], revalidate:30); // 30초가 지난후 새로운 요청이 있다면 재 호출
+// tags를 통한 캐시 새로고침도 가능
+// nextJS에서, api를 통한 fetch의 경우 nextCache 사용 필요 없이 자동으로 캐시해준다.
+// 예시
+// fetch("https://api.com", {
+//     next: {
+//         revalidate: 60,
+//         tags: ["hello"],
+//     },
+// });
 
 export async function getInitialProducts() {
     const products = await db.product.findMany({
