@@ -8,12 +8,13 @@ import {
     revalidateTag,
 } from "next/cache";
 import {getCachedProduct, getCachedProductTitle} from "@/app/products/[id]/actions";
+import getSession from "@/lib/session";
 
 async function getIsOwner(userId: number) {
-    // const session = await getSession();
-    // if (session.id) {
-    //     return session.id === userId;
-    // }
+    const session = await getSession();
+    if (session.id) {
+        return session.id === userId;
+    }
     return false;
 }
 
@@ -41,6 +42,9 @@ export default async function ProductDetail({
     const isOwner = await getIsOwner(product.userId);
     const revalidate = async () => {
         "use server";
+        // revalidateTag("product-title");
+
+        // getCachedProduct, getCachedProductTitle의 태그 배열에 "xxxx"가 있다면 캐시 새로고침
         revalidateTag("xxxx");
     };
     return (
