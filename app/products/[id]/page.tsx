@@ -7,8 +7,31 @@ import { notFound } from "next/navigation";
 import {
     revalidateTag,
 } from "next/cache";
-import {getCachedProduct, getCachedProductTitle} from "@/app/products/[id]/actions";
+import {getProduct} from "@/app/products/[id]/actions";
 import getSession from "@/lib/session";
+import { unstable_cache as nextCache } from "next/cache";
+import DeleteButton from "@/app/products/[id]/edit/delete-button";
+
+const getCachedProduct = nextCache(getProduct, ["product-detail","product"], {
+    tags: ["product-detail","product"],
+});
+
+async function getProductTitle(id: number) {
+    const product = await db.product.findUnique({
+        where: {
+            id,
+        },
+        select: {
+            title: true,
+        },
+    });
+    return product;
+}
+
+const getCachedProductTitle = nextCache(getProductTitle, ["product-title"], {
+    tags: ["product-title", "product-detail"],
+});
+
 
 async function getIsOwner(userId: number) {
     const session = await getSession();
@@ -45,7 +68,7 @@ export default async function ProductDetail({
         // revalidateTag("product-title");
 
         // getCachedProduct, getCachedProductTitle의 태그 배열에 "xxxx"가 있다면 캐시 새로고침
-        revalidateTag("xxxx");
+        revalidateTag("product-title",);
     };
     return (
         <div className="pt-20 pb-40 relative">
@@ -95,20 +118,29 @@ export default async function ProductDetail({
         <span className="font-semibold text-xl">
           {formatToWon(product.price)}원
         </span>
-                {isOwner ? (
-                    <form action={revalidate}>
-                        <button className="bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold">
-                            Revalidate title cache
-                        </button>
-                    </form>
-                ) : null}
+                <section className="flex gap-2 items-center">
+                    {isOwner ? (
+                        <form action={revalidate}>
+                            <button className="bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold">
+                                Revalidate title cache
+                            </button>
+                        </form>
+                    ) : null}
+                    <Link
+                        className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold"
+                        href={`/products/${product.id}/edit`}
+                    >
+                        Edit
+                    </Link>
+                    <Link
+                        className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold"
+                        href={``}
+                    >
+                        채팅하기
+                    </Link>
+                    <DeleteButton  id={id} isOwner={isOwner} />
 
-                <Link
-                    className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold"
-                    href={``}
-                >
-                    채팅하기
-                </Link>
+                </section>
             </div>
         </div>
     );
@@ -120,5 +152,5 @@ export async function generateStaticParams() {
             id: true,
         },
     });
-    return products.map((product) => ({ id: product.id + "" }));
+    return products.map((product) => ({id: product.id + ""}));
 }
