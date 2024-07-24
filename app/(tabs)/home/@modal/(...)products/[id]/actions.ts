@@ -11,6 +11,7 @@ export async function getProduct(id: number) {
             image: true,
             title: true,
             description:true,
+            price:true,
             user:true
         },
     });

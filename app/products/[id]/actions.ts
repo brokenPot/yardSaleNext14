@@ -4,7 +4,6 @@ import db from "@/lib/db";
 import {unstable_cache as nextCache} from "next/dist/server/web/spec-extension/unstable-cache";
 
 export async function getProduct(id: number) {
-    console.log("product");
     // nextJs의 fetch는 자동으로 cache된다. 태그 옵션도 설정 가능하다.
     // fetch("https://api.com", {
     //     next: {

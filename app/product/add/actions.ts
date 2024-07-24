@@ -6,7 +6,7 @@ import getSession from "@/lib/session";
 import { redirect } from "next/navigation";
 import { productSchema } from "./schema";
 
-export async function uploadProduct(_: any,  formData: FormData) {
+export async function uploadProduct( formData: FormData) {
     const data = {
         photo: formData.get("photo"),
         title: formData.get("title"),
@@ -41,7 +41,6 @@ export async function uploadProduct(_: any,  formData: FormData) {
                 },
             });
             redirect(`/products/${product.id}`);
-            //redirect("/products")
         }
     }
 }
