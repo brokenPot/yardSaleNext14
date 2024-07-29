@@ -2,7 +2,7 @@
 
 import { createComment } from "@/app/posts/[id]/actions";
 import { formatToTimeAgo } from "@/lib/utils";
-import {Suspense, useOptimistic, useRef} from "react";
+import {Suspense, useOptimistic, useRef, useTransition} from "react";
 import { AddComment } from "./add-comment";
 import Comments from "@/components/comments";
 
@@ -32,22 +32,26 @@ export function CommentList({ allComments,sessionId, postId, me }: ICommentListP
             return [...state, newComment];
         }
     );
+    const [, startTransition] = useTransition();
+
     const handleSubmit = async (payload: string, postId: number) => {
-        if (!me) return;
-        addOptimisticComment({
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-            id: optimisticComments.length + 1,
-            payload,
-            postId: postId,
-            user: {
-                name: me.name,
-                avatar: me.avatar,
-            },
-        });
-        if (commentEndRef.current)
-            commentEndRef.current.scrollIntoView({ behavior: "smooth" });
-        await createComment(payload, postId);
+        startTransition(async ()=>{
+            if (!me) return;
+            addOptimisticComment({
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                id: optimisticComments.length + 1,
+                payload,
+                postId: postId,
+                user: {
+                    name: me.name,
+                    avatar: me.avatar,
+                },
+            });
+            if (commentEndRef.current)
+                commentEndRef.current.scrollIntoView({ behavior: "smooth" });
+            await createComment(payload, postId);
+        })
     };
 
     return (

@@ -2,7 +2,7 @@
 
 import { HandThumbUpIcon } from "@heroicons/react/24/solid";
 import { HandThumbUpIcon as OutlineHandThumbUpIcon } from "@heroicons/react/24/outline";
-import { useOptimistic } from "react";
+import {useOptimistic, useTransition} from "react";
 import { dislikePost, likePost } from "@/app/posts/[id]/actions";
 
 interface LikeButtonProps {
@@ -16,6 +16,8 @@ export default function LikeButton({
                                        likeCount,
                                        postId,
                                    }: LikeButtonProps) {
+    const [, startTransition] = useTransition();
+    // 불러오기전 화면상으로 수정된 정보를 미리 보여줌.
     const [state, reducerFn] = useOptimistic(
         { isLiked, likeCount },
         (previousState, payload) => ({
@@ -26,12 +28,14 @@ export default function LikeButton({
         })
     );
     const onClick = async () => {
-        reducerFn(undefined);
-        if (isLiked) {
-            await dislikePost(postId);
-        } else {
-            await likePost(postId);
-        }
+        startTransition( async ()=>{
+            reducerFn(undefined);
+            if (isLiked) {
+                await dislikePost(postId);
+            } else {
+                await likePost(postId);
+            }
+        })
     };
     return (
         <button
