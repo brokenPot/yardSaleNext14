@@ -3,7 +3,7 @@ import { formatToWon } from "@/lib/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import {notFound, redirect} from "next/navigation";
 import {
     revalidateTag,
 } from "next/cache";
@@ -70,6 +70,31 @@ export default async function ProductDetail({
         // getCachedProduct, getCachedProductTitle의 태그 배열에 "xxxx"가 있다면 캐시 새로고침
         revalidateTag("product-title",);
     };
+
+    const createChatRoom = async () => {
+        "use server";
+        const session = await getSession();
+        const room = await db.chatRoom.create({
+            data: {
+                users: {
+                    connect: [
+                        {
+                            id: product.userId,
+                        },
+                        {
+                            id: session.id,
+                        },
+                    ],
+                },
+            },
+            select: {
+                id: true,
+            },
+        });
+        console.log("room : ",room)
+        redirect(`/chats/${room.id}`);
+    };
+
     return (
         <div className="pt-20 pb-40 relative">
             <div
@@ -132,14 +157,13 @@ export default async function ProductDetail({
                     >
                         Edit
                     </Link>
-                    <Link
-                        className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold"
-                        href={``}
-                    >
-                        채팅하기
-                    </Link>
-                    <DeleteButton  id={id} isOwner={isOwner} />
 
+                    <DeleteButton id={id} isOwner={isOwner}/>
+                    <form action={createChatRoom}>
+                        <button className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold">
+                            채팅하기
+                        </button>
+                    </form>
                 </section>
             </div>
         </div>

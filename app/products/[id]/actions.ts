@@ -2,6 +2,8 @@
 
 import db from "@/lib/db";
 import {unstable_cache as nextCache} from "next/dist/server/web/spec-extension/unstable-cache";
+// import getSession from "@/lib/session";
+// import {redirect} from "next/navigation";
 
 export async function getProduct(id: number) {
     // nextJs의 fetch는 자동으로 cache된다. 태그 옵션도 설정 가능하다.
@@ -49,3 +51,26 @@ export async function getProductTitle(id: number) {
 export const getCachedProductTitle = nextCache(getProductTitle, ["product-title"], {
     tags: ["product-title","xxxx"],
 });
+
+
+// export async function  createChatRoom  (userId: number)  {
+//     const session = await getSession();
+//     const room = await db.chatRoom.create({
+//         data: {
+//             users: {
+//                 connect: [
+//                     {
+//                         id:  userId,
+//                     },
+//                     {
+//                         id: session.id,
+//                     },
+//                 ],
+//             },
+//         },
+//         select: {
+//             id: true,
+//         },
+//     });
+//     redirect(`/chats/${room.id}`);
+// };
