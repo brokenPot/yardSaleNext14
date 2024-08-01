@@ -2,32 +2,85 @@
 import dog from "@/public/dog.jpg"
 import { formatToTimeAgo } from "@/lib/utils";
 import {ArrowUpCircleIcon} from "@heroicons/react/24/solid";
+import {RealtimeChannel, createClient} from "@supabase/supabase-js";
 import Image from "next/image";
-import {  useState } from "react";
-import {InitialChatMessages} from "@/app/chats/[id]/actions";
+import {useEffect, useRef, useState} from "react";
+import {InitialChatMessages, saveMessage} from "@/app/chats/[id]/actions";
+
+
+const SUPABASE_PUBLIC_KEY = ""
+const SUPABASE_URL = "";
 
 interface ChatMessageListProps {
     initialMessages: InitialChatMessages;
     userId: number;
+    username:string;
+    avatar:string;
+    chatRoomId: string;
 }
 export default function ChatMessagesList({
                                              initialMessages,
                                              userId,
+                                             chatRoomId,
+                                             username,
+                                             avatar,
                                          }: ChatMessageListProps) {
     // console.log(initialMessages)
-    const [messages, ] = useState(initialMessages);
+    const [messages, setMessages] = useState(initialMessages);
     const [message, setMessage] = useState("");
+    const channel = useRef<RealtimeChannel>();
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {
             target: { value },
         } = event;
         setMessage(value);
     };
-    const onSubmit = (event: React.FormEvent) => {
+    const onSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         alert(message);
+        setMessages((prevMsgs) => [
+            ...prevMsgs,
+            {
+                id: Date.now(),
+                payload: message,
+                created_at: new Date(),
+                userId,
+                user: {
+                    name: "string",
+                    avatar: "xxx",
+                },
+            },
+        ]);
+        channel.current?.send({
+            type: "broadcast",
+            event: "message",
+            payload: {
+                id: Date.now(),
+                payload: message,
+                created_at: new Date(),
+                userId,
+                user: {
+                    username,
+                    avatar,
+                },
+            },
+        });
+        await saveMessage(message, chatRoomId);
         setMessage("");
     };
+
+    useEffect(() => {
+        const client = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
+        channel.current = client.channel(`room-${chatRoomId}`);
+        channel.current
+            .on("broadcast", { event: "message" }, (payload) => {
+                setMessages((prevMsgs) => [...prevMsgs, payload.payload]);
+            })
+            .subscribe();
+        return () => {
+            channel.current?.unsubscribe();
+        };
+    }, [chatRoomId]);
     return (
         <div className="p-5 flex flex-col gap-5 min-h-screen justify-end">
             {messages.map((message) => (
@@ -40,7 +93,7 @@ export default function ChatMessagesList({
                     {message.userId === userId ? null : (
                         message.user.avatar !== null ? (
                                 <Image
-                                    src={message.user.avatar!}
+                                    src={message.user.avatar ? message.user.avatar : ""}
                                     alt={message.user.name}
                                     width={50}
                                     height={50}

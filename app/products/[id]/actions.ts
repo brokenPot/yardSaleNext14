@@ -22,11 +22,21 @@ export async function getProduct(id: number) {
                 select: {
                     name: true,
                     avatar: true,
+                    chat_rooms: true,
+                },
+            },
+            ChatRoom: {
+                select: {
+                    id: true,
+                    users: {
+                        select: {
+                            id: true,
+                        },
+                    },
                 },
             },
         },
     });
-    console.log(product)
     return product;
 }
 

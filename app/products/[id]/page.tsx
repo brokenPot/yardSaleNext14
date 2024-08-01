@@ -12,9 +12,9 @@ import getSession from "@/lib/session";
 import { unstable_cache as nextCache } from "next/cache";
 import DeleteButton from "@/app/products/[id]/edit/delete-button";
 
-const getCachedProduct = nextCache(getProduct, ["product-detail","product"], {
-    tags: ["product-detail","product"],
-});
+// const getCachedProduct = nextCache(getProduct, ["product-detail","product"], {
+//     tags: ["product-detail","product"],
+// });
 
 async function getProductTitle(id: number) {
     const product = await db.product.findUnique({
@@ -23,6 +23,7 @@ async function getProductTitle(id: number) {
         },
         select: {
             title: true,
+            ChatRoom:true
         },
     });
     return product;
@@ -41,12 +42,30 @@ async function getIsOwner(userId: number) {
     return false;
 }
 
-
+interface ChatRoomResponse {
+    id: string;
+    users: {
+        id: number;
+    }[];
+}
 export async function generateMetadata({ params }: { params: { id: string } }) {
     const product = await getCachedProductTitle(Number(params.id));
     return {
         title: product?.title,
     };
+}
+
+function findRoomWithBothUsers(
+    chatRooms: ChatRoomResponse[],
+    sellerId: number,
+    buyerId: number
+) {
+    return chatRooms.filter((room) => {
+        // room.users 배열에서 판매자 ID와 구매자 ID가 모두 존재하는지 확인
+        const hasSeller = room.users.some((user) => user.id === sellerId);
+        const hasBuyer = room.users.some((user) => user.id === buyerId);
+        return hasSeller && hasBuyer;
+    });
 }
 
 export default async function ProductDetail({
@@ -58,11 +77,11 @@ export default async function ProductDetail({
     if (isNaN(id)) {
         return notFound();
     }
-    const product = await getCachedProduct(id);
+    const product = await getProduct(id);
+    console.log(product)
     if (!product) {
         return notFound();
     }
-    const isOwner = await getIsOwner(product.userId);
     const revalidate = async () => {
         "use server";
         // revalidateTag("product-title");
@@ -74,26 +93,43 @@ export default async function ProductDetail({
     const createChatRoom = async () => {
         "use server";
         const session = await getSession();
-        const room = await db.chatRoom.create({
-            data: {
-                users: {
-                    connect: [
-                        {
-                            id: product.userId,
+        const currentRoom = product.ChatRoom;
+        console.log("현재 채팅방 : ", currentRoom) // 안나온다.
+        const isRoomExist = findRoomWithBothUsers(
+            currentRoom,
+            product.userId,
+            +session.id!
+        );
+        console.log("채팅방 존재 여부 : ",isRoomExist)
+        if (isRoomExist.length > 0) {
+            redirect(`/chats/${isRoomExist[0].id}`);
+        } else {
+            const room = await db.chatRoom.create({
+                data: {
+                    users: {
+                        connect: [
+                            {
+                                id: product.userId,
+                            },
+                            {
+                                id: session.id,
+                            },
+                        ],
+                    },
+                    product: {
+                        connect: {
+                            id: product.id,
                         },
-                        {
-                            id: session.id,
-                        },
-                    ],
+                    },
                 },
-            },
-            select: {
-                id: true,
-            },
-        });
-        console.log("room : ",room)
-        redirect(`/chats/${room.id}`);
+                select: {
+                    id: true,
+                },
+            });
+            redirect(`/chats/${room.id}`);
+        }
     };
+    const isOwner = await getIsOwner(product.userId);
 
     return (
         <div className="pt-20 pb-40 relative">
@@ -144,26 +180,25 @@ export default async function ProductDetail({
           {formatToWon(product.price)}원
         </span>
                 <section className="flex gap-2 items-center">
-                    {isOwner ? (
+                    {isOwner && (
                         <form action={revalidate}>
                             <button className="bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold">
                                 Revalidate title cache
                             </button>
                         </form>
-                    ) : null}
-                    <Link
+                    ) }
+                    {isOwner && (<Link
                         className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold"
                         href={`/products/${product.id}/edit`}
                     >
                         Edit
-                    </Link>
-
+                    </Link>)}
                     <DeleteButton id={id} isOwner={isOwner}/>
-                    <form action={createChatRoom}>
+                    {!isOwner && (<form action={createChatRoom}>
                         <button className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold">
                             채팅하기
                         </button>
-                    </form>
+                    </form>)}
                 </section>
             </div>
         </div>

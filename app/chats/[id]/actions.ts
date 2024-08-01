@@ -4,6 +4,18 @@ import db from "@/lib/db";
 import getSession from "@/lib/session";
 import {Prisma} from "@prisma/client";
 
+export async function saveMessage(payload: string, chatRoomId: string) {
+    const session = await getSession();
+    await db.message.create({
+        data: {
+            payload,
+            chatRoomId,
+            userId: session.id!,
+        },
+        select: { id: true },
+    });
+}
+
 export async function getRoom(id: string) {
     const room = await db.chatRoom.findUnique({
         where: {
@@ -12,6 +24,11 @@ export async function getRoom(id: string) {
         include: {
             users: {
                 select: { id: true },
+            },
+            product: {
+                select: {
+                    id: true,
+                },
             },
         },
     });
@@ -23,6 +40,20 @@ export async function getRoom(id: string) {
         }
     }
     return room;
+}
+
+export async function getUserInfo() {
+    const session = await getSession();
+    const user = await db.user.findUnique({
+        where: {
+            id: session.id,
+        },
+        select: {
+            avatar: true,
+            name: true,
+        },
+    });
+    return user;
 }
 
 export async function getMessages(chatRoomId: string) {
@@ -47,3 +78,5 @@ export async function getMessages(chatRoomId: string) {
 }
 
 export type InitialChatMessages = Prisma.PromiseReturnType<typeof getMessages>;
+
+
