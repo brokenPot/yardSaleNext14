@@ -19,9 +19,12 @@ export default function RootLayout({
 }>) {
   return (
       <html lang="en">
-          <body className={` bg-neutral-900 text-white max-w-screen-sm mx-auto`}>
-            {children}
-          </body>
+      <head>
+          <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
+      </head>
+      <body className={` bg-neutral-900 text-white max-w-screen-sm mx-auto`}>
+      {children}
+      </body>
       </html>
   );
 }

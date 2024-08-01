@@ -7,10 +7,6 @@ import Image from "next/image";
 import {useEffect, useRef, useState} from "react";
 import {InitialChatMessages, saveMessage} from "@/app/chats/[id]/actions";
 
-
-const SUPABASE_PUBLIC_KEY = ""
-const SUPABASE_URL = "";
-
 interface ChatMessageListProps {
     initialMessages: InitialChatMessages;
     userId: number;
@@ -70,7 +66,7 @@ export default function ChatMessagesList({
     };
 
     useEffect(() => {
-        const client = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
+        const client = createClient(process.env.NEXT_PUBLIC_SUPERBASE_URL!,  process.env.NEXT_PUBLIC_SUPERBASE_PUBLIC_API_KEY!);
         channel.current = client.channel(`room-${chatRoomId}`);
         channel.current
             .on("broadcast", { event: "message" }, (payload) => {
@@ -81,6 +77,7 @@ export default function ChatMessagesList({
             channel.current?.unsubscribe();
         };
     }, [chatRoomId]);
+
     return (
         <div className="p-5 flex flex-col gap-5 min-h-screen justify-end">
             {messages.map((message) => (
