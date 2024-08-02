@@ -66,6 +66,7 @@ export async function getMessages(chatRoomId: string) {
             payload: true,
             created_at: true,
             userId: true,
+            isRead: true,
             user: {
                 select: {
                     avatar: true,
@@ -80,3 +81,16 @@ export async function getMessages(chatRoomId: string) {
 export type InitialChatMessages = Prisma.PromiseReturnType<typeof getMessages>;
 
 
+export async function markMessageAsRead(chatRoomId: string) {
+    const updatedMessage = await db.message.updateMany({
+        where: {
+            chatRoomId: chatRoomId,
+            isRead: false,
+        },
+        data: {
+            isRead: true,
+        },
+    });
+
+    return updatedMessage;
+}

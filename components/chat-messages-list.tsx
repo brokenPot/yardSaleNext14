@@ -33,13 +33,13 @@ export default function ChatMessagesList({
     };
     const onSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        alert(message);
         setMessages((prevMsgs) => [
             ...prevMsgs,
             {
                 id: Date.now(),
                 payload: message,
                 created_at: new Date(),
+                isRead: false,
                 userId,
                 user: {
                     name: "string",
@@ -55,6 +55,7 @@ export default function ChatMessagesList({
                 payload: message,
                 created_at: new Date(),
                 userId,
+                isRead: false,
                 user: {
                     username,
                     avatar,

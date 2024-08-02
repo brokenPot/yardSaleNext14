@@ -47,20 +47,19 @@ export async function getAllChatRoom() {
 
 //안읽은 메세지 갯수 세기
 //나의 메세지 제외, 다른 사람의 메세지만 세기
-// export async function countUnreadMessages() {
-//     const session = await getSession();
-//     const unreadCount = await db.message.count({
-//         where: {
-//             userId: {
-//                 not: session.id,
-//             },
-//             isRead: false,
-//         },
-//     });
-//
-//     return unreadCount;
-// }
-//
+export async function countUnreadMessages(id: number | undefined) {
+    const unreadCount = await db.message.count({
+        where: {
+            userId: {
+                not: id,
+            },
+            isRead: false,
+        },
+    });
+
+    return unreadCount;
+}
+
 export const getAllChatRoomCache = nextCache(getAllChatRoom, ["chatRoom-all"], {
     tags: ["chatRoom-all"],
 });
