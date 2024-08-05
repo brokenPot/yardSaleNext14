@@ -18,7 +18,6 @@ const DeleteButton = ({ id, isOwner }: { id: number; isOwner: boolean }) => {
         <button
             onClick={onClick}
             type="button"
-            // className="bg-red-500 w-full h-10 rounded-md text-white font-semibold"
             className="bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold"
         >
             {isLoading ? "삭제하는 중.." : "삭제하기"}

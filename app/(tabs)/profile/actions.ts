@@ -14,9 +14,12 @@ export async function getUser() {
                 id: session.id,
             },
             select:{
+                id:true,
                 createdAt:true,
                 name:true,
                 avatar:true,
+                phone:true,
+                email:true,
                 products:{
                     select:{
                         id:true,
