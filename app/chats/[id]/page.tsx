@@ -1,9 +1,8 @@
 import ChatMessagesList from "@/components/chat-messages-list";
-// import db from "@/lib/db";
 import getSession from "@/lib/session";
-// import {Prisma} from "@prisma/client";
 import { notFound } from "next/navigation";
 import {getMessages, getRoom, getUserInfo, markMessageAsRead} from "./actions";
+import Layout from "@/components/LayoutFrame";
 
   export default async function ChatRoom({ params }: { params: { id: string } }) {
     const room = await getRoom(params.id);
@@ -22,7 +21,11 @@ import {getMessages, getRoom, getUserInfo, markMessageAsRead} from "./actions";
           return notFound();
       }
     return (
-        <ChatMessagesList chatRoomId={params.id} userId={session.id!}    username={user.name}
-                          avatar={user.avatar!} initialMessages={setReadMessages} />
+        <Layout canGoBack title={user?.id === room?.users[0].id ?  room?.users[0].name : room?.users[1].name} productName={room?.product?.title} seoTitle={'Chatting'}>
+          <ChatMessagesList chatRoomId={params.id} userId={session.id!} username={user.name}
+                            avatar={user.avatar!} initialMessages={setReadMessages} />
+        </Layout>
+
+
     );
 }

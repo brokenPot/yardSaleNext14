@@ -22,8 +22,6 @@ const metallica = localFont({
     variable: "--metallica-text",
 });
 
-// const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
     title: {
         template: "%s | yard sale",
@@ -39,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
       <html lang="en">
-      <body         className={` ${roboto.variable} ${rubick.variable} ${metallica.variable}  bg-neutral-900 text-white max-w-screen-sm mx-auto`}
+      <body className={`${roboto.variable} ${rubick.variable} ${metallica.variable}  bg-neutral-900 text-white max-w-screen-sm mx-auto`}
       >
       {children}
       </body>

@@ -23,11 +23,12 @@ export async function getRoom(id: string) {
         },
         include: {
             users: {
-                select: { id: true },
+                select: { id: true,name:true },
             },
             product: {
                 select: {
                     id: true,
+                    title:true
                 },
             },
         },
@@ -49,6 +50,7 @@ export async function getUserInfo() {
             id: session.id,
         },
         select: {
+            id:true,
             avatar: true,
             name: true,
         },

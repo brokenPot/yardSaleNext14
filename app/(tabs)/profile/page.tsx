@@ -20,6 +20,7 @@ async function  MiniProfile() {
                         src={user.avatar }
                         alt={user.name}
                         priority
+                        unoptimized
                     />)
                     : (
                     <div className="w-16 h-16 bg-slate-500 rounded-full"/>

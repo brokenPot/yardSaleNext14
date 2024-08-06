@@ -8,7 +8,6 @@ import {uploadPost} from "@/app/life/add/actions";
 
 export default function AddProduct() {
     const router = useRouter();
-
     const [state, action] = useFormState(uploadPost, null);
     return (
         <div>
