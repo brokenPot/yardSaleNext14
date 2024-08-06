@@ -9,7 +9,6 @@ import getSession from "@/lib/session";
 
 export default async function Chat() {
     const session = await getSession();
-
     const rooms = await getAllChatRoomCache();
     const unReadCount = await countUnreadMessages(session.id);
 

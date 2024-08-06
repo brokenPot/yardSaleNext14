@@ -132,7 +132,6 @@ export default function ChatMessagesList({
                     </div>
                 </div>
             ))}
-            {/*fixed w-full max-w-screen-md justify-center*/}
             <form className="mx-auto fixed inset-x-0 bottom-0 max-w-md" onSubmit={onSubmit}>
                     <input
                         required

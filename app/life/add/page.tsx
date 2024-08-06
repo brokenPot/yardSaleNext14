@@ -23,7 +23,7 @@ export default function AddProduct() {
                     name="description"
                     type="text"
                     required
-                    placeholder=""
+                    placeholder="내용"
                     errors={state?.fieldErrors.description}
                 />
                 <div className="flex gap-2 mx-auto">

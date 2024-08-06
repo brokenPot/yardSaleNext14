@@ -53,7 +53,7 @@ export default  function  EditProfileComp ({userId,avatar, name,phone,email}:Use
         formData.append("email", data.email as any);
         const errors = await editUser(formData);
         if (errors) {
-            console.log(errors);
+            console.log("에러 : ",errors);
         }
     });
     const onValid = async () => {
@@ -67,7 +67,7 @@ export default  function  EditProfileComp ({userId,avatar, name,phone,email}:Use
                         (<Image
                             width={100}
                             height={100}
-                            src={ preview}
+                            src={preview}
                             alt={name}
                             priority
                         />)

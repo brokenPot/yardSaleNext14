@@ -21,7 +21,7 @@ import Layout from "@/components/LayoutFrame";
           return notFound();
       }
     return (
-        <Layout canGoBack title={user?.id === room?.users[0].id ?  room?.users[0].name : room?.users[1].name} productName={room?.product?.title} seoTitle={'Chatting'}>
+        <Layout canGoBack title={user?.id === room?.users[0].id ?  room?.users[0].name : room?.users[1].name} productName={room?.product?.title} >
           <ChatMessagesList chatRoomId={params.id} userId={session.id!} username={user.name}
                             avatar={user.avatar!} initialMessages={setReadMessages} />
         </Layout>

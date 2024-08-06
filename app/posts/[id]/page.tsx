@@ -9,6 +9,7 @@ import dog from "@/public/dog.jpg"
 import LikeButton from "@/components/like-button";
 import {getComments} from "@/app/posts/[id]/actions";
 import {CommentList} from "@/components/commentList";
+import Link from "next/link";
 
 async function getPost(id: number) {
     try {
@@ -117,6 +118,15 @@ export default async function PostDetail({params,}: {
 
     return (
         <div className="p-5 text-white">
+            <div
+                className="p-5  w-full bg-neutral-800  flex justify-items-start align-middle max-w-screen-sm z-50">
+                <Link
+                    className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold z-1"
+                    href={`/life`}
+                >
+                    뒤로가기
+                </Link>
+            </div>
             <div className="flex items-center gap-2 mb-2">
                 <Image
                     width={28}
@@ -124,6 +134,7 @@ export default async function PostDetail({params,}: {
                     className="size-7 rounded-full"
                     src={dog}
                     alt={post.user.name}
+                    unoptimized
                 />
                 <div>
                     <span className="text-sm font-semibold">{post.user.name}</span>
@@ -136,11 +147,11 @@ export default async function PostDetail({params,}: {
             <p className="mb-5">{post.description}</p>
             <div className="flex flex-col gap-5 items-start">
                 <div className="flex items-center gap-2 text-neutral-400 text-sm">
-                    <EyeIcon className="size-5" />
+                    <EyeIcon className="size-5"/>
                     <span>조회 {post.views}</span>
                 </div>
-                <LikeButton isLiked={isLiked} likeCount={likeCount} postId={id} />
-                <CommentList postId={post.id} sessionId={session.id!} allComments={allComments} me={me} />
+                <LikeButton isLiked={isLiked} likeCount={likeCount} postId={id}/>
+                <CommentList postId={post.id} sessionId={session.id!} allComments={allComments} me={me}/>
             </div>
         </div>
     );

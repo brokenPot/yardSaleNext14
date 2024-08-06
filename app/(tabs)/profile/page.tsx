@@ -2,12 +2,10 @@ import {Suspense} from "react";
 import {getUser, logOut} from "@/app/(tabs)/profile/actions";
 import Link from "next/link";
 import FormButton from "@/components/form-btn";
-import dog from "@/public/dog.jpg";
 import Image from "next/image";
 
 
 async function  MiniProfile() {
-    await new Promise((res)=>setTimeout(res,1000))
     const user = await getUser();
 
     return (

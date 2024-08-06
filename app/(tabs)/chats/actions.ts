@@ -15,13 +15,6 @@ export async function getAllChatRoom() {
             },
         },
         include: {
-            // users: {
-            //     where: {
-            //         NOT: {
-            //             id: session.id,
-            //         },
-            //     },
-            // },
             users:true,
             product: {
                 select: {

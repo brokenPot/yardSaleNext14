@@ -45,7 +45,6 @@ export async function getInitialProducts() {
         // 버튼형 로드를 위한 코드
         take: 1,
 
-
         orderBy: {
             createdAt: "desc",
         },
