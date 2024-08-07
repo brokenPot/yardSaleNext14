@@ -1,3 +1,5 @@
+"use client";
+
 interface FormInputProps {
     name:string
     type: string;

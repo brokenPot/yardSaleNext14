@@ -1,4 +1,3 @@
-import db from "@/lib/db";
 import { formatToTimeAgo } from "@/lib/utils";
 import {
     ChatBubbleBottomCenterIcon,
@@ -6,25 +5,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import {PlusIcon} from "@heroicons/react/24/solid";
-
-async function getPosts() {
-    const posts = await db.post.findMany({
-        select: {
-            id: true,
-            title: true,
-            description: true,
-            views: true,
-            created_at: true,
-            _count: {
-                select: {
-                    comments: true,
-                    likes: true,
-                },
-            },
-        },
-    });
-    return posts;
-}
+import {getPosts} from "./actions";
 
 export const metadata = {
     title: "동네생활",

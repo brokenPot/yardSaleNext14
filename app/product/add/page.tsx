@@ -3,15 +3,13 @@
 import _Input from "@/components/input";
 import { PhotoIcon,ArrowPathIcon } from "@heroicons/react/24/solid";
 import {useState} from "react";
-import { uploadProduct } from "./actions";
+import {uploadProduct} from "./actions";
 import {MB, PLZ_ADD_PHOTO} from "@/lib/constants";
 import ProductAddBtn from "@/components/productAddBtn";
 import { useRouter } from "next/navigation";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {productSchema, ProductType} from "@/app/product/add/schema";
-
-
 export default function AddProduct() {
     const router = useRouter();
     const [preview, setPreview] = useState("");

@@ -1,5 +1,6 @@
-import { EllipsisVerticalIcon } from "@heroicons/react/24/solid";
+"use client";
 
+import { EllipsisVerticalIcon } from "@heroicons/react/24/solid";
 import {
     HandThumbUpIcon as OutlineHandThumbUpIcon,
     HandThumbDownIcon as OutlineHandThumbDownIcon,
