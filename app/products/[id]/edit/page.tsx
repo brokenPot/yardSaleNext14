@@ -16,7 +16,7 @@ export default async function EditProduct({
     if (isNaN(id)) {
         return notFound();
     }
-    // console.log(id)
+
     const product = await getCachedProduct(id);
     if (product === null) {
         return notFound();

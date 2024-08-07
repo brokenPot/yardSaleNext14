@@ -1,14 +1,13 @@
 "use server";
 
-import db from "@/lib/db";
 import getSession from "@/lib/session";
-import { redirect } from "next/navigation";
+import db from "@/lib/db";
+import {redirect} from "next/navigation";
 import {postSchema} from "@/app/life/add/schema";
 
-export async function uploadPost(formData: FormData) {
-    const user = await getSession();
-    if (!user.id) return;
+export async  function updatePost   ( formData: FormData)  {
     const data = {
+        id: formData.get("id"),
         title: formData.get("title"),
         description: formData.get("description"),
     };
@@ -18,9 +17,11 @@ export async function uploadPost(formData: FormData) {
     } else {
         const session = await getSession();
         if (session.id) {
-            const post = await db.post.create({
+            const post = await db.post.update({
+                where: {
+                    id: Number(data.id) ,
+                },
                 data: {
-                    userId: user.id,
                     title: result.data.title,
                     description: result.data.description,
                 },

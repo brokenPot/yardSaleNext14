@@ -29,12 +29,18 @@ export default async function PostDetail({params,}: {
     return (
         <div className="p-5 text-white">
             <div
-                className="p-5  w-full bg-neutral-800  flex justify-items-start align-middle max-w-screen-sm z-50">
+                className="p-5 w-full bg-neutral-800 flex justify-between align-middle max-w-screen-sm z-50">
                 <Link
-                    className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold z-1"
+                    className="bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold z-1"
                     href={`/life`}
                 >
                     뒤로가기
+                </Link>
+                <Link
+                    className="bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold z-1"
+                    href={`/posts/${id}/edit`}
+                >
+                    수정하기
                 </Link>
             </div>
             <div className="flex items-center gap-2 mb-2">

@@ -1,15 +1,19 @@
 "use client";
 
-import Input from "@/components/input";
+import _Input from "@/components/input";
 import ProductAddBtn from "@/components/productAddBtn";
 import { useRouter } from "next/navigation";
-import {uploadPost} from "@/app/life/add/actions";
-import {ProductType} from "@/app/products/[id]/edit/schema";
+import {postSchema, PostType} from "@/app/life/add/schema";
+import { ProductType} from "@/app/products/[id]/edit/schema";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {postSchema} from "@/app/life/add/schema";
+import {updatePost} from "@/app/posts/[id]/edit/actions";
 
-export default function AddPost() {
+export default function EditPostForm({
+                                         id,
+                                         title,
+                                         description,
+                                     }: PostType) {
     const router = useRouter();
     const {
         register,
@@ -17,13 +21,17 @@ export default function AddPost() {
         formState: { errors },
     } = useForm<ProductType>({
         resolver: zodResolver(postSchema),
+        defaultValues: {
+            title,
+            description,
+        },
     });
-
     const onSubmitData = handleSubmit(async (data: ProductType) => {
         const formData = new FormData();
+        formData.append("id",  id as any);
         formData.append("title", data.title);
         formData.append("description", data.description);
-        const errors = await uploadPost(formData);
+        const errors = await updatePost(formData);
         if (errors) {
             console.log(errors);
         }
@@ -36,23 +44,23 @@ export default function AddPost() {
     return (
         <div>
             <form action={onValid}  className="p-5 flex flex-col gap-5">
-                <Input
+                <_Input
                     type="text"
                     required
-                    placeholder='제목'
+                    placeholder={title}
                     {...register("title")}
                     errors={[errors.title?.message ?? ""]}
                 />
-                <Input
+                <_Input
                     type="text"
                     required
-                    placeholder='내용'
+                    placeholder={description}
                     {...register("description")}
                     errors={[errors.description?.message ?? ""]}
                 />
                 <div className="flex gap-2 mx-auto">
-                    <ProductAddBtn type="submit" text={'작성완료'}/>
-                    <ProductAddBtn type="button" href="/products" text={'돌아가기'} onClick={() => router.push("/")}/>
+                    <ProductAddBtn type="submit" text={'수정 완료'}/>
+                    <ProductAddBtn type="button" href="/posts" text={'돌아가기'} onClick={() => router.push("/")}/>
                 </div>
             </form>
         </div>

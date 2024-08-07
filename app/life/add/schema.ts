@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const postSchema = z.object({
+    id: z.coerce.number().optional(),
     title: z.string({
         required_error: "Title is required",
     }),

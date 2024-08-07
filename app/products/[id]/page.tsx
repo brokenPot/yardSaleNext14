@@ -94,13 +94,11 @@ export default async function ProductDetail({
         "use server";
         const session = await getSession();
         const currentRoom = product.ChatRoom;
-        console.log("현재 채팅방 : ", currentRoom) // 안나온다.
         const isRoomExist = findRoomWithBothUsers(
             currentRoom,
             product.userId,
             +session.id!
         );
-        console.log("채팅방 존재 여부 : ",isRoomExist)
         if (isRoomExist.length > 0) {
             redirect(`/chats/${isRoomExist[0].id}`);
         } else {

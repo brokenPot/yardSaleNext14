@@ -79,7 +79,8 @@ const formSchema = z
         message: "Both passwords should be the same!",
         path: ["confirm_password"],
     });
-export async function createAccount(prevState: any, formData: FormData) {
+
+export async function createAccount(_: any, formData: FormData) {
     const data = {
         name: formData.get("name"),
         email: formData.get("email"),
