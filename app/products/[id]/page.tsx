@@ -134,7 +134,7 @@ export default async function ProductDetail({
             <div
                 className="fixed top-0 p-5  w-full bg-neutral-800  flex justify-items-start align-middle max-w-screen-sm z-50">
                 <Link
-                    className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold z-1"
+                    className="bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold z-1"
                     href={`/home`}
                 >
                     뒤로가기
@@ -193,7 +193,7 @@ export default async function ProductDetail({
                     </Link>)}
                     <DeleteButton id={id} isOwner={isOwner}/>
                     {!isOwner && (<form action={createChatRoom}>
-                        <button className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold">
+                        <button className="bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold">
                             채팅하기
                         </button>
                     </form>)}
