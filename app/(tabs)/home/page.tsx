@@ -1,7 +1,6 @@
 import ProductList from "@/components/product-list";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { Prisma } from "@prisma/client";
-// import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import {getInitialProducts} from "@/app/(tabs)/home/actions";
 
@@ -18,7 +17,6 @@ export const metadata = {
 // export const revalidate = 60;
 
 export default async function Products() {
-    // #13.3
     const initialProducts = await getInitialProducts();
     // const revalidate = async () => {
     //     "use server";

@@ -2,7 +2,7 @@
 
 import db from "@/lib/db";
 import getSession from "@/lib/session";
-import { revalidateTag } from "next/cache";
+import {revalidatePath, revalidateTag} from "next/cache";
 import {unstable_cache as nextCache} from "next/dist/server/web/spec-extension/unstable-cache";
 
 export async function likePost(postId: number) {
@@ -152,3 +152,17 @@ export async function getLikeStatus(postId: number, userId: number) {
     isLiked: Boolean(isLiked),
   };
 }
+
+export async function deletePost (id: number, isOwner: boolean) {
+  if (!isOwner) return;
+  const post = await db.post.delete({
+    where: {
+      id,
+    },
+    select: {
+      title:true,
+    },
+  });
+  revalidatePath("/post");
+  return post
+};

@@ -8,6 +8,8 @@ import LikeButton from "@/components/like-button";
 import {getCachedComments, getCachedPost, getMe,getCachedLikeStatus} from "@/app/posts/[id]/actions";
 import {CommentList} from "@/components/commentList";
 import Link from "next/link";
+import PostDeleteButton from "@/app/posts/[id]/edit/PostDeleteButton";
+import {getIsOwner} from "@/app/products/[id]/page";
 
 export default async function PostDetail({params,}: {
     params: { id: string };
@@ -26,6 +28,7 @@ export default async function PostDetail({params,}: {
     const me = await getMe();
     const session = await getSession();
 
+    const isOwner = await getIsOwner(post.userId);
     return (
         <div className="p-5 text-white">
             <div
@@ -36,12 +39,13 @@ export default async function PostDetail({params,}: {
                 >
                     뒤로가기
                 </Link>
-                <Link
+                {isOwner && (<Link
                     className="bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold z-1"
                     href={`/posts/${id}/edit`}
                 >
                     수정하기
-                </Link>
+                </Link>)}
+                {isOwner && (<PostDeleteButton   id={post.id} isOwner={isOwner}/>)}
             </div>
             <div className="flex items-center gap-2 mb-2">
                 <Image

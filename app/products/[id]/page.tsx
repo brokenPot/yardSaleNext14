@@ -34,7 +34,7 @@ const getCachedProductTitle = nextCache(getProductTitle, ["product-title"], {
 });
 
 
-async function getIsOwner(userId: number) {
+export async function getIsOwner(userId: number) {
     const session = await getSession();
     if (session.id) {
         return session.id === userId;
