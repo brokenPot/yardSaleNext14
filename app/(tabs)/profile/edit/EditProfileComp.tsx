@@ -1,13 +1,11 @@
 "use client";
 
-import {useForm} from "react-hook-form";
 import _Input from "@/components/input";
-import ProductAddBtn from "@/components/productAddBtn";
-import {userSchema, UserType} from "@/app/(tabs)/profile/edit/schema";
 import {editUser} from "@/app/(tabs)/profile/edit/actions";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useState} from "react";
 import Image from "next/image";
+import {useFormState} from "react-dom";
+import FormButton from "@/components/form-btn";
+import {useState} from "react";
 
 interface UserDataType {
     userId: number;
@@ -18,18 +16,9 @@ interface UserDataType {
 }
 
 
-export default  function  EditProfileComp ({userId,avatar, name,phone,email}:UserDataType)  {
+export default  function  EditProfileComp ({avatar, name,phone,email}:UserDataType)  {
     const [preview, setPreview] = useState(avatar);
-    const {
-        register,
-        setValue,
-        handleSubmit,
-        setError,
-        formState: { errors },
-    } = useForm<UserType>({
-        resolver: zodResolver(userSchema),
-    });
-
+    const [state, dispatch] = useFormState(editUser, null);
     const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {
             target: { files },
@@ -38,30 +27,11 @@ export default  function  EditProfileComp ({userId,avatar, name,phone,email}:Use
         const file = files[0];
         const url = URL.createObjectURL(file);
         setPreview(url);
-        setValue(
-            "avatar",
-            file
-        );
     };
 
-    const onSubmitData = handleSubmit(async (data: UserType) => {
-        const formData = new FormData();
-        formData.append("userId",  userId as any);
-        formData.append("avatar", data.avatar as any);
-        formData.append("name", data.name as any);
-        formData.append("phone",   data.phone as any);
-        formData.append("email", data.email as any);
-        const errors = await editUser(formData);
-        if (errors) {
-            console.log("에러 : ",errors);
-        }
-    });
-    const onValid = async () => {
-        await onSubmitData();
-    };
     return (
         <div >
-            <form action={onValid} className="py-10 px-4 space-y-4">
+            <form action={dispatch} className="py-10 px-4 space-y-4">
                 <div className="flex items-center space-x-3">
                     {preview ?
                         (<Image
@@ -80,6 +50,7 @@ export default  function  EditProfileComp ({userId,avatar, name,phone,email}:Use
                     >
                         Change
                         <input
+                            name='avatar'
                             onChange={onImageChange}
                             id="picture"
                             type="file"
@@ -92,24 +63,24 @@ export default  function  EditProfileComp ({userId,avatar, name,phone,email}:Use
                     required
                     type="text"
                     placeholder={name}
-                    {...register("name")}
-                    errors={[errors.name?.message ?? ""]}
+                    name="name"
+                    errors={state?.fieldErrors.name}
                 />
                 <_Input
                     required
                     type="email"
                     placeholder={email}
-                    {...register("email")}
-                    errors={[errors.email?.message ?? ""]}
+                    name="email"
+                    errors={state?.fieldErrors.email}
                 />
                 <_Input
                     required
                     type="number"
                     placeholder={phone}
-                    {...register("phone")}
-                    errors={[errors.phone?.message ?? ""]}
+                    name="phone"
+                    errors={state?.fieldErrors.phone}
                 />
-                <ProductAddBtn type="submit" text={'작성완료'}/>
+                <FormButton  text={'작성완료'}/>
             </form>
         </div>
     );
