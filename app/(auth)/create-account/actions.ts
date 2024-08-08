@@ -7,6 +7,7 @@ import db from "@/lib/db";
 import { z } from "zod";
 import getSession from "@/lib/session";
 import {redirect} from "next/navigation";
+import fs from "fs/promises";
 
 const checkUsername = (name: string) => !name.includes("dumb");
 
@@ -28,6 +29,7 @@ const formSchema = z
             .toLowerCase()
             .trim()
             .refine(checkUsername, "No dumbs allowed!"),
+        avatar: z.string(),
         email: z.string().email().toLowerCase(),
         password: z.string().min(PASSWORD_MIN_LENGTH)
         .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
@@ -82,11 +84,17 @@ const formSchema = z
 
 export async function createAccount(_: any, formData: FormData) {
     const data = {
+        avatar: formData.get("avatar"),
         name: formData.get("name"),
         email: formData.get("email"),
         password: formData.get("password"),
         confirm_password: formData.get("confirm_password"),
     };
+    if (data.avatar instanceof File) {
+        const photoData = await data.avatar.arrayBuffer();
+        await fs.appendFile(`./public/${data.avatar.name.split(".")[0]}`, Buffer.from(photoData));
+        data.avatar = `/${data.avatar.name.split(".")[0]}`;
+    }
     const result = await formSchema.spa(data);
     if (!result.success) {
         return result.error.flatten();
@@ -96,6 +104,7 @@ export async function createAccount(_: any, formData: FormData) {
         const hashedPassword = await bcrypt.hash(result.data.password, 12); // 해싱 알고리즘 12번
         const user = await db.user.create({
             data: {
+                avatar:result.data.avatar,
                 name: result.data.name,
                 email: result.data.email,
                 password: hashedPassword,
@@ -104,16 +113,9 @@ export async function createAccount(_: any, formData: FormData) {
                 id: true,
             },
         });
-        // const cookie = await getIronSession(cookies(), {
-        //     cookieName: "yard-sale",
-        //     password: process.env.COOKIE_PASSWORD!,
-        // });
         const session = await getSession();
-
         session.id = user.id;
         await session.save();
         redirect("/profile");
-
-        // await sessionSave(user.id)
     }
 }
