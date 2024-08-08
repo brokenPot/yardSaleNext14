@@ -18,9 +18,11 @@ const formSchema = z
             .toLowerCase()
             .trim()
             .refine(checkUsername, "No dumbs allowed!"),
-        avatar: z.string({
-            required_error: "Where is your avatar??",
-        }),
+        avatar: z.any(
+            // {
+            // required_error: "Where is your avatar??",
+            // }
+        ),
         phone: z.string({
             required_error: "Where is your phone number??",
         }),
@@ -83,10 +85,17 @@ export async  function editUser   (_:any, formData: FormData)  {
         phone: formData.get("phone"),
         email: formData.get("email"),
     };
+    console.log(data)
+
+
     if (data.avatar instanceof File) {
-        const photoData = await data.avatar.arrayBuffer();
-        await fs.appendFile(`./public/${data.avatar.name}`, Buffer.from(photoData));
-        data.avatar = `/${data.avatar.name}`;
+        if(data.avatar.name==='undefined'){
+            data.avatar = null;
+        }else{
+            const photoData = await data.avatar.arrayBuffer();
+            await fs.appendFile(`./public/${data.avatar.name}`, Buffer.from(photoData));
+            data.avatar = `/${data.avatar.name}`;
+        }
     }
     const result =  await formSchema.spa(data);
     if (!result.success) {

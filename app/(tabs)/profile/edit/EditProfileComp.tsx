@@ -15,7 +15,6 @@ interface UserDataType {
     email?: string;
 }
 
-
 export default  function  EditProfileComp ({avatar, name,phone,email}:UserDataType)  {
     const [preview, setPreview] = useState(avatar);
     const [state, dispatch] = useFormState(editUser, null);
@@ -58,25 +57,26 @@ export default  function  EditProfileComp ({avatar, name,phone,email}:UserDataTy
                             accept="image/*"
                         />
                     </label>
+                    {state?.fieldErrors.avatar}
                 </div>
                 <_Input
                     required
                     type="text"
-                    placeholder={name}
+                    // placeholder={name}
+                    defaultValue={name}
                     name="name"
                     errors={state?.fieldErrors.name}
                 />
                 <_Input
-                    required
                     type="email"
-                    placeholder={email}
+                    defaultValue={email}
                     name="email"
                     errors={state?.fieldErrors.email}
                 />
                 <_Input
                     required
                     type="number"
-                    placeholder={phone}
+                    defaultValue={phone}
                     name="phone"
                     errors={state?.fieldErrors.phone}
                 />
