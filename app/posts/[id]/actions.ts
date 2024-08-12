@@ -49,8 +49,23 @@ export async function createComment(payload: string, postId: number) {
   return newComment;
 }
 
+export async function updateComment(payload: string, commentId: number) {
+  const user = await getSession();
+  if (!user.id) return;
+  const newComment = await db.comment.update({
+    where:{
+      id:commentId
+    },
+    data: {
+      payload:payload,
+    },
+  });
+  revalidateTag(`comments`);
+  return newComment;
+}
+
+
 export async function getComments(postId: number) {
-  "use server";
   const comments = await db.comment.findMany({
     where: {
       postId: postId,
@@ -66,7 +81,7 @@ export async function getComments(postId: number) {
 
 export async function getCachedComments(postId: number) {
   const cachedComments = nextCache(getComments, ["comments"], {
-    tags: [`comments-${postId}`],
+    tags: [`comments-${postId}`,"comments"],
   });
   return cachedComments(postId);
 }
@@ -165,4 +180,19 @@ export async function deletePost (id: number, isOwner: boolean) {
   });
   revalidatePath("/post");
   return post
-};
+}
+
+export async function deleteComment (postId: number, commentId: number, isOwner: boolean) {
+  if (!isOwner) return;
+  const comment = await db.comment.delete({
+    where: {
+      id:commentId,
+    },
+    select: {
+      user: true
+    }
+  });
+  revalidatePath(`/post/${postId}`);
+  revalidateTag("comments");
+  return comment
+}

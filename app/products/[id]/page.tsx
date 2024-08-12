@@ -12,10 +12,6 @@ import getSession from "@/lib/session";
 import { unstable_cache as nextCache } from "next/cache";
 import DeleteButton from "@/app/products/[id]/edit/delete-button";
 
-// const getCachedProduct = nextCache(getProduct, ["product-detail","product"], {
-//     tags: ["product-detail","product"],
-// });
-
 async function getProductTitle(id: number) {
     const product = await db.product.findUnique({
         where: {
@@ -78,7 +74,6 @@ export default async function ProductDetail({
         return notFound();
     }
     const product = await getProduct(id);
-    console.log(product)
     if (!product) {
         return notFound();
     }

@@ -11,12 +11,15 @@ interface IAddCommentProps {
 
 export function AddComment({ postId, handleSubmit, me }: IAddCommentProps) {
     const [loading, setLoading] = useState(false);
+    const [inputValue, setInputValue] = useState("");
+
     async function onSubmit(event: FormEvent<HTMLFormElement>) {
         setLoading(true);
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const payload = formData.get("payload") as string;
         await handleSubmit(payload, postId);
+        setInputValue(""); // 입력 필드 초기화
         setLoading(false);
     }
     return (
@@ -33,6 +36,8 @@ export function AddComment({ postId, handleSubmit, me }: IAddCommentProps) {
                     }
                     className="w-11/12 h-12 bg-transparent rounded-full focus:outline-none outline-offset-2"
                     name="payload"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)} // 입력값 변경 핸들러
                     disabled={!me}
                 />
                 {me && (

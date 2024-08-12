@@ -85,8 +85,6 @@ export async  function editUser   (_:any, formData: FormData)  {
         phone: formData.get("phone"),
         email: formData.get("email"),
     };
-    console.log(data)
-
 
     if (data.avatar instanceof File) {
         if(data.avatar.name==='undefined'){
@@ -103,7 +101,7 @@ export async  function editUser   (_:any, formData: FormData)  {
     } else {
         const session = await getSession();
         if (session.id) {
-            const user = await db.user.update({
+            await db.user.update({
                 where: {
                     id: Number(session.id) ,
                 },

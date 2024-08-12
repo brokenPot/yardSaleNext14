@@ -64,6 +64,7 @@ export function CommentList({ allComments,sessionId, postId, me }: ICommentListP
                     <Comments
                         key={comment.id}
                         id={comment.id}
+                        postId={postId}
                         payload={comment.payload}
                         sessionId={sessionId}
                         user={comment.user}
