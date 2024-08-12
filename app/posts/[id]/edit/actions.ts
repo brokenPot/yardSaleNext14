@@ -4,6 +4,7 @@ import getSession from "@/lib/session";
 import db from "@/lib/db";
 import {redirect} from "next/navigation";
 import {postSchema} from "@/app/life/add/schema";
+import {revalidateTag} from "next/cache";
 
 export async  function updatePost   ( formData: FormData)  {
     const data = {
@@ -26,6 +27,7 @@ export async  function updatePost   ( formData: FormData)  {
                     description: result.data.description,
                 },
             });
+            revalidateTag("post-detail");
             redirect(`/posts/${post.id}`);
         }
     }

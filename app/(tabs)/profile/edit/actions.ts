@@ -96,6 +96,7 @@ export async  function editUser   (_:any, formData: FormData)  {
         }
     }
     const result =  await formSchema.spa(data);
+    console.log(result)
     if (!result.success) {
         return result.error.flatten();
     } else {

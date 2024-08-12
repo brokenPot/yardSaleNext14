@@ -30,7 +30,9 @@ export default async function Chat() {
                                         src={`${room.product.image}`}
                                         width={50}
                                         height={50}
+                                        style={{ width: 50, height: 50 }}
                                         alt={room.product.title}
+                                        priority
                                     />
                                 </div>
                                 <div className=" flex flex-col gap-1">
@@ -39,8 +41,10 @@ export default async function Chat() {
                                             <Image
                                                 src={`${room.users[1].avatar}`}
                                                 alt={room.users[1].name}
-                                                width={30}
-                                                height={30}
+                                                width={50}
+                                                height={50}
+                                                style={{ width: 50, height: 50 }}
+                                                priority
                                             />
                                         ) : (
                                             <div className="size-8 rounded-full bg-slate-400"></div>

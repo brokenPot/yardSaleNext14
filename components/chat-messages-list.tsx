@@ -102,6 +102,7 @@ export default function ChatMessagesList({
                                     alt={message.user.name}
                                     width={50}
                                     height={50}
+                                    style={{ width: 50, height: 50 }}
                                     className="size-8 rounded-full"
                                 />
                             ) : (
@@ -110,6 +111,7 @@ export default function ChatMessagesList({
                                 alt={message.user.name}
                                 width={50}
                                 height={50}
+                                style={{ width: 50, height: 50 }}
                                 className="size-8 rounded-full"
                             />
                             )

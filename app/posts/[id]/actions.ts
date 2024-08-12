@@ -119,7 +119,6 @@ export async function getPost(id: number) {
 
 export const getCachedPost = nextCache(getPost, ["post-detail"], {
   tags: ["post-detail"],
-  revalidate: 30,
 });
 
 export async function getCachedLikeStatus(postId: number) {
