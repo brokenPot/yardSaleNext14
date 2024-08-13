@@ -25,6 +25,7 @@ export async function getUser() {
                         id:true,
                         price:true,
                         title:true,
+                        image:true,
                         userId:true
                     }
                 }

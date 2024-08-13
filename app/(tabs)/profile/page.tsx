@@ -1,48 +1,48 @@
-import {Suspense} from "react";
+import React, {Suspense} from "react";
 import {getUser, logOut} from "@/app/(tabs)/profile/actions";
 import Link from "next/link";
 import FormButton from "@/components/form-btn";
 import Image from "next/image";
+import Item from "@/components/item";
 
 
-async function  MiniProfile() {
-    const user = await getUser();
-
+async function  MiniProfile({user}:any) {
     return (
-        <div className="flex justify-between items-center">
-            <div className="flex items-center mt-4 space-x-3">
-                {user?.avatar ?
-                    (<Image
-                        width={100}
-                        height={100}
-                        src={user.avatar }
-                        alt={user.name}
-                        priority
-                        unoptimized
-                    />)
-                    : (
-                    <div className="w-16 h-16 bg-slate-500 rounded-full"/>
-                )}
-                <div className="flex flex-col">
-                    <span className="font-medium text-white">{user?.name}</span>
-                    <Link href="/profile/edit">
-                        <span className="text-sm text-white">Edit profile &rarr;</span>
-                    </Link>
+            <div className="flex justify-between items-center">
+                <div className="flex items-center mt-4 space-x-3">
+                    {user?.avatar ?
+                        (<Image
+                            width={100}
+                            height={100}
+                            src={user.avatar}
+                            alt={user.name}
+                            priority
+                            unoptimized
+                        />)
+                        : (
+                            <div className="w-16 h-16 bg-slate-500 rounded-full"/>
+                        )}
+                    <div className="flex flex-col">
+                        <span className="font-medium text-white">{user?.name}</span>
+                        <Link href="/profile/edit">
+                            <span className="text-sm text-white">Edit profile &rarr;</span>
+                        </Link>
+                    </div>
                 </div>
+                <form action={logOut}>
+                    <FormButton text={'Logout'}/>
+                </form>
             </div>
-            <form action={logOut}>
-                <FormButton text={'Logout'}/>
-            </form>
-        </div>
     );
 };
 
 export default async function Profile() {
+    const user = await getUser();
 
     return (
         <div className="py-10 px-4">
             <Suspense fallback={"Loading Mini Profile"}>
-                <MiniProfile/>
+                <MiniProfile user={user}/>
             </Suspense>
             <div className="mt-10 flex justify-around">
                 <Link href="/profile/sold">
@@ -115,7 +115,22 @@ export default async function Profile() {
                     </span>
                 </Link>
             </div>
-</div>
-)
-    ;
+            <div className="pt-5">
+                <span className="font-bold text-white">판매 중</span>
+                <hr className="h-px my-2 bg-gray-700 border-0"/>
+            </div>
+            {user?.products?.length! > 0 ?
+                (user?.products?.map((product: any) => (
+                    <Item
+                        key={product.id}
+                        id={product.id}
+                        title={product.title}
+                        image={product.image}
+                        price={product.price}
+                    />
+                )))
+                : <div>판매하는 상품이 없습니다</div>}
+        </div>
+    )
+        ;
 }
