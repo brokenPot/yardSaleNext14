@@ -4,6 +4,7 @@ import Link from "next/link";
 import FormButton from "@/components/form-btn";
 import Image from "next/image";
 import Item from "@/components/item";
+import {getIsOwner} from "@/app/products/[id]/page";
 
 
 async function  MiniProfile({user}:any) {
@@ -38,6 +39,7 @@ async function  MiniProfile({user}:any) {
 
 export default async function Profile() {
     const user = await getUser();
+    const isOwner = await getIsOwner(user.id);
 
     return (
         <div className="py-10 px-4">
@@ -127,6 +129,7 @@ export default async function Profile() {
                         title={product.title}
                         image={product.image}
                         price={product.price}
+                        isOwner={isOwner}
                     />
                 )))
                 : <div>판매하는 상품이 없습니다</div>}

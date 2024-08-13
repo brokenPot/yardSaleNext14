@@ -21,7 +21,7 @@ function CommentControl({postId , commentId , isOwner,setEditModal,setModal }:Co
         }
     };
 
-    const handleUpdate = async () => {
+    const handleUpdate =  () => {
         setEditModal((prevState) => !prevState );
         setModal((prevState) => !prevState );
     };

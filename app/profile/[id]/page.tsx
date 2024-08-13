@@ -3,6 +3,7 @@ import React from 'react';
 import Item from "@/components/item";
 import {getUserInfo} from "@/app/profile/[id]/actions";
 import Link from "next/link";
+import {getIsOwner} from "@/app/products/[id]/page";
 
 async function  Page({
                          params,
@@ -10,6 +11,7 @@ async function  Page({
     params: { id: number };
 }) {
     const data = await getUserInfo(params.id);
+    const isOwner = await getIsOwner(params.id);
 
     return (
         <div className="py-10 px-4">
@@ -42,6 +44,7 @@ async function  Page({
                         title={product.title}
                         image={product.image}
                         price={product.price}
+                        isOwner={isOwner}
                     />
                 )))
                 : <div>판매하는 상품이 없습니다</div>}

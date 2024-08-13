@@ -1,5 +1,3 @@
-"use client";
-
 import {Dispatch, FormEvent, SetStateAction, useState} from "react";
 import { updateComment} from "@/app/posts/[id]/actions";
 
@@ -10,7 +8,7 @@ interface CommentEditProps {
     setEditModal:  Dispatch<SetStateAction<boolean>>;
 }
 
-export function EditComment({  comment, commentId,  setModal,setEditModal}: CommentEditProps) {
+export function EditComment({  comment, commentId, setModal, setEditModal}: CommentEditProps) {
     const [loading, setLoading] = useState(false);
     const [inputValue, setInputValue] = useState(comment);
     const handleSubmit = async (payload: string, commentId: number) => {
