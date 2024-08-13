@@ -24,6 +24,7 @@ export default async function Modal({ params }: { params: { id: string } }) {
                     <Image
                         src={product.image}
                         alt={product.title}
+                        sizes="500"
                         fill
                         className="object-cover"
                     />

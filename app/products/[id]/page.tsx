@@ -105,7 +105,6 @@ export default async function ProductDetail({
                     뒤로가기
                 </Link>
             </div>
-
             <div className="relative aspect-square">
                 <Image
                     className="object-cover"
@@ -124,6 +123,7 @@ export default async function ProductDetail({
                                 src={product.user.avatar}
                                 width={40}
                                 height={40}
+                                style={{ width: 40, height: 40 }}
                                 alt={product.user.name}
                             />
                         ) : (

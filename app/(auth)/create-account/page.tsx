@@ -34,6 +34,7 @@ export default function CreateAccount() {
                         (<Image
                             width={100}
                             height={100}
+                            style={{ width: 100, height: 100 }}
                             src={preview}
                             alt={preview}
                             priority

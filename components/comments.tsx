@@ -49,6 +49,7 @@ export default function Comments({
                             alt={user.name}
                             width={30}
                             height={30}
+                            style={{ width: 30, height: 30 }}
                         />
                     {/*) : (*/}
                     {/*    <div className="rounded-full size-8 bg-slate-400"></div>*/}

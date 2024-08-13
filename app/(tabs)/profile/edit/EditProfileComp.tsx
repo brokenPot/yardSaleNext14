@@ -36,6 +36,7 @@ export default  function  EditProfileComp ({avatar, name,phone,email}:UserDataTy
                         (<Image
                             width={100}
                             height={100}
+                            style={{ width: 100, height: 100 }}
                             src={preview}
                             alt={name}
                             priority

@@ -15,6 +15,7 @@ async function  MiniProfile({user}:any) {
                         (<Image
                             width={100}
                             height={100}
+                            style={{ width: 100, height: 100 }}
                             src={user.avatar}
                             alt={user.name}
                             priority
@@ -66,8 +67,8 @@ export default async function Profile() {
                             </svg>
                         </div>
                         <span className="text-sm mt-2 font-medium text-white">
-                판매완료
-              </span>
+                            판매완료
+                        </span>
                     </span>
                 </Link>
                 <Link href="/profile/bought">
@@ -89,8 +90,8 @@ export default async function Profile() {
                             </svg>
                         </div>
                         <span className="text-sm mt-2 font-medium text-white">
-                구매완료
-              </span>
+                            구매완료
+                        </span>
                     </span>
                 </Link>
                 <Link href="/profile/loved">
@@ -112,8 +113,8 @@ export default async function Profile() {
                             </svg>
                         </div>
                         <span className="text-sm mt-2 font-medium text-white">
-                관심목록
-              </span>
+                            관심목록
+                        </span>
                     </span>
                 </Link>
             </div>
