@@ -6,7 +6,7 @@ import {revalidatePath, revalidateTag} from "next/cache";
 import {unstable_cache as nextCache} from "next/dist/server/web/spec-extension/unstable-cache";
 
 export async function likePost(postId: number) {
-  await new Promise((r) => setTimeout(r, 10000));
+  // await new Promise((r) => setTimeout(r, 10000));
   const session = await getSession();
   try {
     await db.like.create({
@@ -20,7 +20,7 @@ export async function likePost(postId: number) {
 }
 
 export async function dislikePost(postId: number) {
-  await new Promise((r) => setTimeout(r, 10000));
+  // await new Promise((r) => setTimeout(r, 10000));
   try {
     const session = await getSession();
     await db.like.delete({
