@@ -1,4 +1,4 @@
-import db from "@/lib/db";
+
 import { formatToWon } from "@/lib/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
@@ -7,28 +7,15 @@ import {notFound, redirect} from "next/navigation";
 import {
     revalidateTag,
 } from "next/cache";
-import {getProduct} from "@/app/products/[id]/actions";
+import { FindRoomWithBothUsers, getProduct, getProductTitle} from "@/app/products/[id]/actions";
 import getSession from "@/lib/session";
 import { unstable_cache as nextCache } from "next/cache";
 import DeleteButton from "@/app/products/[id]/edit/delete-button";
-
-async function getProductTitle(id: number) {
-    const product = await db.product.findUnique({
-        where: {
-            id,
-        },
-        select: {
-            title: true,
-            ChatRoom:true
-        },
-    });
-    return product;
-}
+import db from "@/lib/db";
 
 const getCachedProductTitle = nextCache(getProductTitle, ["product-title"], {
     tags: ["product-title", "product-detail"],
 });
-
 
 export async function getIsOwner(userId: number) {
     const session = await getSession();
@@ -38,12 +25,6 @@ export async function getIsOwner(userId: number) {
     return false;
 }
 
-interface ChatRoomResponse {
-    id: string;
-    users: {
-        id: number;
-    }[];
-}
 export async function generateMetadata({ params }: { params: { id: string } }) {
     const product = await getCachedProductTitle(Number(params.id));
     return {
@@ -51,24 +32,13 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
     };
 }
 
-function findRoomWithBothUsers(
-    chatRooms: ChatRoomResponse[],
-    sellerId: number,
-    buyerId: number
-) {
-    return chatRooms.filter((room) => {
-        // room.users 배열에서 판매자 ID와 구매자 ID가 모두 존재하는지 확인
-        const hasSeller = room.users.some((user) => user.id === sellerId);
-        const hasBuyer = room.users.some((user) => user.id === buyerId);
-        return hasSeller && hasBuyer;
-    });
-}
-
 export default async function ProductDetail({
                                                 params
                                             }: {
     params: { id: string };
 }) {
+    // const router = useRouter();
+
     const id = Number(params.id);
     if (isNaN(id)) {
         return notFound();
@@ -89,7 +59,7 @@ export default async function ProductDetail({
         "use server";
         const session = await getSession();
         const currentRoom = product.ChatRoom;
-        const isRoomExist = findRoomWithBothUsers(
+        const isRoomExist = await FindRoomWithBothUsers(
             currentRoom,
             product.userId,
             +session.id!
@@ -146,19 +116,21 @@ export default async function ProductDetail({
                     priority
                 />
             </div>
-            <div className="p-5 flex items-center gap-3 border-b border-neutral-700">
-                <div className="size-10 overflow-hidden rounded-full">
-                    {product.user.avatar !== null ? (
-                        <Image
-                            src={product.user.avatar}
-                            width={40}
-                            height={40}
-                            alt={product.user.name}
-                        />
-                    ) : (
-                        <UserIcon/>
-                    )}
-                </div>
+            <div className="p-5 flex items-center gap-3 border-b border-neutral-700 ">
+                <Link className="cursor-pointer" href={ isOwner ? '/profile' : `/profile/${product.user.id}`}>
+                    <div className="size-10 overflow-hidden rounded-full">
+                        {product.user.avatar !== null ? (
+                            <Image
+                                src={product.user.avatar}
+                                width={40}
+                                height={40}
+                                alt={product.user.name}
+                            />
+                        ) : (
+                            <UserIcon/>
+                        )}
+                    </div>
+                </Link>
                 <div>
                     <h3>{product.user.name}</h3>
                 </div>
@@ -198,11 +170,3 @@ export default async function ProductDetail({
     );
 }
 
-export async function generateStaticParams() {
-    const products = await db.product.findMany({
-        select: {
-            id: true,
-        },
-    });
-    return products.map((product) => ({id: product.id + ""}));
-}

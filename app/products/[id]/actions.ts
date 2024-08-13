@@ -2,8 +2,6 @@
 
 import db from "@/lib/db";
 import {unstable_cache as nextCache} from "next/dist/server/web/spec-extension/unstable-cache";
-// import getSession from "@/lib/session";
-// import {redirect} from "next/navigation";
 
 export async function getProduct(id: number) {
     // nextJs의 fetch는 자동으로 cache된다. 태그 옵션도 설정 가능하다.
@@ -20,6 +18,7 @@ export async function getProduct(id: number) {
         include: {
             user: {
                 select: {
+                    id:true,
                     name: true,
                     avatar: true,
                     chat_rooms: true,
@@ -63,24 +62,32 @@ export const getCachedProductTitle = nextCache(getProductTitle, ["product-title"
 });
 
 
-// export async function  createChatRoom  (userId: number)  {
-//     const session = await getSession();
-//     const room = await db.chatRoom.create({
-//         data: {
-//             users: {
-//                 connect: [
-//                     {
-//                         id:  userId,
-//                     },
-//                     {
-//                         id: session.id,
-//                     },
-//                 ],
-//             },
-//         },
-//         select: {
-//             id: true,
-//         },
-//     });
-//     redirect(`/chats/${room.id}`);
-// };
+interface ChatRoomResponse {
+    id: string;
+    users: {
+        id: number;
+    }[];
+}
+
+export async function FindRoomWithBothUsers(
+    chatRooms: ChatRoomResponse[],
+    sellerId: number,
+    buyerId: number
+) {
+    return chatRooms.filter((room) => {
+        // room.users 배열에서 판매자 ID와 구매자 ID가 모두 존재하는지 확인
+        const hasSeller = room.users.some((user) => user.id === sellerId);
+        const hasBuyer = room.users.some((user) => user.id === buyerId);
+        return hasSeller && hasBuyer;
+    });
+}
+
+
+export async function generateStaticParams() {
+    const products = await db.product.findMany({
+        select: {
+            id: true,
+        },
+    });
+    return products.map((product) => ({id: product.id + ""}));
+}
