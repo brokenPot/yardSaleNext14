@@ -2,10 +2,11 @@
 import dog from "@/public/dog.jpg"
 import { formatToTimeAgo } from "@/lib/utils";
 import {ArrowUpCircleIcon} from "@heroicons/react/24/solid";
-import {RealtimeChannel, createClient} from "@supabase/supabase-js";
+import {RealtimeChannel} from "@supabase/supabase-js";
 import Image from "next/image";
 import {useEffect, useRef, useState} from "react";
 import {InitialChatMessages, saveMessage} from "@/app/chats/[id]/actions";
+import {supabaseClient} from "@/lib/supabaseClient";
 
 interface ChatMessageListProps {
     initialMessages: InitialChatMessages;
@@ -69,8 +70,7 @@ export default function ChatMessagesList({
     };
 
     useEffect(() => {
-        const client = createClient(process.env.NEXT_PUBLIC_SUPERBASE_URL!,  process.env.NEXT_PUBLIC_SUPERBASE_PUBLIC_API_KEY!);
-        channel.current = client.channel(`room-${chatRoomId}`);
+        channel.current = supabaseClient.channel(`room-${chatRoomId}`);
         channel.current
             .on("broadcast", { event: "message" }, (payload) => {
                 setMessages((prevMsgs) => [...prevMsgs, payload.payload]);

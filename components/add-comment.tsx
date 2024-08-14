@@ -13,7 +13,7 @@ export function AddComment({ postId, handleSubmit, me }: IAddCommentProps) {
     const [loading, setLoading] = useState(false);
     const [inputValue, setInputValue] = useState("");
 
-    async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    async function onSubmit(event:  FormEvent<HTMLFormElement>) {
         setLoading(true);
         event.preventDefault();
         const formData = new FormData(event.currentTarget);

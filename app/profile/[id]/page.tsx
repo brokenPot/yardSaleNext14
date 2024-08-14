@@ -3,6 +3,7 @@ import Item from "@/components/item";
 import {getUserInfo} from "@/app/profile/[id]/actions";
 import Link from "next/link";
 import {getIsOwner} from "@/app/products/[id]/page";
+import {Product} from "@prisma/client";
 
 async function  Page({
                          params,
@@ -36,7 +37,7 @@ async function  Page({
                 <hr className="h-px my-2 bg-gray-700 border-0"/>
             </div>
             {data?.products?.length! > 0 ?
-                (data?.products?.map((product: any) => (
+                (data?.products?.map((product: Product) => (
                     <Item
                         key={product.id}
                         id={product.id}

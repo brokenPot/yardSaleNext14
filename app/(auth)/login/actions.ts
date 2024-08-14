@@ -36,7 +36,7 @@ const formSchema = z.object({
 });
 
 // 비동기 함수
-export async function logIn(prevState: any, formData: FormData) {
+export async function logIn(_: any, formData: FormData) {
     const data = {
         email: formData.get("email"),
         password: formData.get("password"),

@@ -6,8 +6,17 @@ import Image from "next/image";
 import Item from "@/components/item";
 import {getIsOwner} from "@/app/products/[id]/page";
 
+interface userType {
+    id: number,
+    phone: string | null,
+    email: string | null,
+    name: string,
+    avatar: string | null,
+    createdAt: Date,
+    products: {id: number, title: string, price: number, image: string, userId: number}[]
+}
 
-async function  MiniProfile({user}:any) {
+async function  MiniProfile({user}:{user:userType}  ) {
     return (
             <div className="flex justify-between items-center">
                 <div className="flex items-center mt-4 space-x-3">
@@ -36,7 +45,7 @@ async function  MiniProfile({user}:any) {
                 </form>
             </div>
     );
-};
+}
 
 export default async function Profile() {
     const user = await getUser();
@@ -123,7 +132,7 @@ export default async function Profile() {
                 <hr className="h-px my-2 bg-gray-700 border-0"/>
             </div>
             {user?.products?.length! > 0 ?
-                (user?.products?.map((product: any) => (
+                (user?.products?.map((product) => (
                     <Item
                         key={product.id}
                         id={product.id}
