@@ -45,7 +45,7 @@ export default async function PostDetail({params,}: {
                 >
                     수정하기
                 </Link>)}
-                {isOwner && (<PostDeleteButton   id={post.id} isOwner={isOwner}/>)}
+                {isOwner && (<PostDeleteButton id={post.id} isOwner={isOwner}/>)}
             </div>
             <div className="flex items-center gap-2 mb-2">
                 <Image

@@ -63,7 +63,6 @@ export default  function  EditProfileComp ({avatar, name,phone,email}:UserDataTy
                 <_Input
                     required
                     type="text"
-                    // placeholder={name}
                     defaultValue={name}
                     name="name"
                     errors={state?.fieldErrors.name}

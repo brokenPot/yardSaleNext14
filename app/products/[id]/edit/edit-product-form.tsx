@@ -137,7 +137,7 @@ export default function EditProductForm({
                     icon={<ArrowPathIcon className="size-4 text-white"/>}
                     text={'초기화'}
                 />
-                <ProductAddBtn type="button" href="/products" text={'돌아가기'} onClick={() => router.push("/")}/>
+                <ProductAddBtn type="button" href="/products" text={'돌아가기'} onClick={() => router.push(`/products/${productId}`)}/>
             </div>
         </form>
     );

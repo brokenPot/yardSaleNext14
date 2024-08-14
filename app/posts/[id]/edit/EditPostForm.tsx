@@ -47,14 +47,14 @@ export default function EditPostForm({
                 <_Input
                     type="text"
                     required
-                    placeholder={title}
+                    defaultValue={title}
                     {...register("title")}
                     errors={[errors.title?.message ?? ""]}
                 />
                 <_Input
                     type="text"
                     required
-                    placeholder={description}
+                    defaultValue={description}
                     {...register("description")}
                     errors={[errors.description?.message ?? ""]}
                 />
