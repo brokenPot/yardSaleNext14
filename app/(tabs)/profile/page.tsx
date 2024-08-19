@@ -133,14 +133,14 @@ export default async function Profile() {
             </div>
             {user?.products?.length! > 0 ?
                 (user?.products?.map((product) => (
-                    <Item
-                        key={product.id}
-                        id={product.id}
-                        title={product.title}
-                        image={product.image}
-                        price={product.price}
-                        isOwner={isOwner}
-                    />
+                        <Item
+                            key={product.id}
+                            id={product.id}
+                            title={product.title}
+                            image={product.image}
+                            price={product.price}
+                            isOwner={isOwner}
+                        />
                 )))
                 : <div>판매하는 상품이 없습니다</div>}
         </div>
