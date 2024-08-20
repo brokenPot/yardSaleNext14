@@ -5,7 +5,6 @@ async function  Page({
                      }: {
     params: { id: number };
 }) {
-    console.log(params)
     return (
         <div className="py-10 px-4">
             bought

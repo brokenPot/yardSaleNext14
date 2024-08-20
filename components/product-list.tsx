@@ -1,7 +1,7 @@
 "use client";
 
 import ListProduct from "./list-product";
-import {useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { getMoreProducts } from "@/app/(tabs)/home/actions";
 import { InitialProducts } from "@/app/(tabs)/home/page";
 
@@ -14,7 +14,6 @@ export default function ProductList({ initialProducts }: ProductListProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [page, setPage] = useState(0);
     const [isLastPage, setIsLastPage] = useState(false);
-
 
     // 버튼형 로드를 위한 코드
     const trigger = useRef<HTMLSpanElement>(null);

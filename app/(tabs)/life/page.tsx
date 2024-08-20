@@ -34,18 +34,15 @@ export default async function Life() {
                 <HandThumbUpIcon className="size-4" />
                   {post._count.likes}
               </span>
-                    <span>
+              <span>
                 <ChatBubbleBottomCenterIcon className="size-4" />
-                        {post._count.comments}
+                  {post._count.comments}
               </span>
                 </div>
             </div>
         </Link>
     ))}
-    <Link
-        href="/life/add"
-        className="bg-blue-500 flex items-center justify-center rounded-full size-16 fixed bottom-24 right-8 text-white transition-colors hover:bg-orange-400"
-    >
+    <Link href="/life/add" className="bg-blue-500 flex items-center justify-center rounded-full size-16 fixed bottom-24 right-8 text-white transition-colors hover:bg-orange-400">
         <PlusIcon className="size-10"/>
     </Link>
 </div>

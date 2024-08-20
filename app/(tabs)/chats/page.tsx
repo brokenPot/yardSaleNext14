@@ -12,7 +12,6 @@ export default async function Chat() {
     const rooms = await getAllChatRoomCache();
     const unReadCount = await countUnreadMessages(session.id);
 
-
     revalidateTag("chatRoom-all");
     return (
         <div className="py-12 px-4 flex flex-col h-screen justify-start items-center ">
