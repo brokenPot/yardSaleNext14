@@ -2,6 +2,8 @@
 
 import db from "@/lib/db";
 import {unstable_cache as nextCache} from "next/dist/server/web/spec-extension/unstable-cache";
+import getSession from "@/lib/session";
+import {revalidateTag} from "next/cache";
 
 export async function getProduct(id: number) {
     // nextJs의 fetch는 자동으로 cache된다. 태그 옵션도 설정 가능하다.
@@ -56,6 +58,64 @@ export async function getProductTitle(id: number) {
     });
     return product;
 }
+
+export async function getProductLikesStatus(productId: number, userId: number) {
+    const isLiked = await db.productLike.findUnique({
+        where: {
+            id: {
+                productId,
+                userId: userId,
+            },
+        },
+    });
+    const likeCount = await db.productLike.count({
+        where: {
+            productId,
+        },
+    });
+    return {
+        likeCount,
+        isLiked: Boolean(isLiked),
+    };
+}
+
+export async function getCachedProductLikesStatus(productId: number) {
+    const session = await getSession()
+    const userId = session.id
+    const cachedOperation = nextCache(getProductLikesStatus, ["product-like-status"], {
+        tags: [`like-status-${productId}`],
+    });
+    return cachedOperation(productId,userId!);
+}
+
+export async function likeProduct(productId: number) {
+    const session = await getSession();
+    try {
+        await db.productLike.create({
+            data: {
+                productId,
+                userId: session.id!,
+            },
+        });
+        revalidateTag(`like-status-${productId}`);
+    } catch (e) {}
+}
+
+export async function dislikeProduct(productId: number) {
+    try {
+        const session = await getSession();
+        await db.productLike.delete({
+            where: {
+                id: {
+                    productId,
+                    userId: session.id!,
+                },
+            },
+        });
+        revalidateTag(`like-status-${productId}`);
+    } catch (e) {}
+}
+
 
 export const getCachedProductTitle = nextCache(getProductTitle, ["product-title"], {
     tags: ["product-title","xxxx"],

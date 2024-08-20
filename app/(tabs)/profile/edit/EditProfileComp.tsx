@@ -18,6 +18,7 @@ interface UserDataType {
 export default  function  EditProfileComp ({avatar, name,phone,email}:UserDataType)  {
     const [preview, setPreview] = useState(avatar);
     const [state, dispatch] = useFormState(editUser, null);
+
     const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {
             target: { files },

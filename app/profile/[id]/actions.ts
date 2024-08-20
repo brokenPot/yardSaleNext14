@@ -7,8 +7,8 @@ export async function getUserInfo(userId:number) {
         },
         select: {
             id:true,
-            avatar: true,
-            name: true,
+            avatar:true,
+            name:true,
             createdAt:true,
             products:true,
         },

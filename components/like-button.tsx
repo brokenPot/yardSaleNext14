@@ -8,19 +8,19 @@ import { dislikePost, likePost } from "@/app/posts/[id]/actions";
 interface LikeButtonProps {
     isLiked: boolean;
     likeCount: number;
-    postId: number;
+    targetId: number;
 }
 
 export default function LikeButton({
                                        isLiked,
                                        likeCount,
-                                       postId,
+                                       targetId,
                                    }: LikeButtonProps) {
     const [, startTransition] = useTransition();
     // 불러오기전 화면상으로 수정된 정보를 미리 보여줌.
     const [state, reducerFn] = useOptimistic(
         { isLiked, likeCount },
-        (previousState, payload) => ({
+        (previousState, ) => ({
             isLiked: !previousState.isLiked,
             likeCount: previousState.isLiked
                 ? previousState.likeCount - 1
@@ -31,9 +31,9 @@ export default function LikeButton({
         startTransition( async ()=>{
             reducerFn(undefined);
             if (isLiked) {
-                await dislikePost(postId);
+                await dislikePost(targetId);
             } else {
-                await likePost(postId);
+                await likePost(targetId);
             }
         })
     };

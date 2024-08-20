@@ -6,11 +6,18 @@ import {notFound, redirect} from "next/navigation";
 import {
     revalidateTag,
 } from "next/cache";
-import { FindRoomWithBothUsers, getProduct, getProductTitle} from "@/app/products/[id]/actions";
+import {
+    FindRoomWithBothUsers,
+    getCachedProductLikesStatus,
+    getProduct,
+    getProductTitle
+} from "@/app/products/[id]/actions";
 import getSession from "@/lib/session";
 import { unstable_cache as nextCache } from "next/cache";
 import DeleteButton from "@/app/products/[id]/edit/delete-button";
 import db from "@/lib/db";
+import ProductLikeButton from "@/components/product-like-button";
+import ShowLikeComp from "@/components/showLikeComp";
 
 const getCachedProductTitle = nextCache(getProductTitle, ["product-title"], {
     tags: ["product-title", "product-detail"],
@@ -37,8 +44,9 @@ export default async function ProductDetail({
     params: { id: string };
 }) {
     // const router = useRouter();
-
     const id = Number(params.id);
+    const { likeCount, isLiked } = await getCachedProductLikesStatus(id);
+
     if (isNaN(id)) {
         return notFound();
     }
@@ -134,9 +142,14 @@ export default async function ProductDetail({
                     <h3>{product.user.name}</h3>
                 </div>
             </div>
-            <div className="p-5">
-                <h1 className="text-2xl font-semibold">{product.title}</h1>
-                <p>{product.description}</p>
+            <div className="flex w-full justify-between align-middle">
+                <div className="p-5">
+                    <h1 className="text-2xl font-semibold">{product.title}</h1>
+                    <p>{product.description}</p>
+                </div>
+                <div className="p-5">
+                    {isOwner ? <ShowLikeComp   likeCount={likeCount}  /> : <ProductLikeButton isLiked={isLiked} likeCount={likeCount} targetId={id}/>}
+                </div>
             </div>
             <div
                 className="fixed w-full bottom-0  p-5 pb-10 bg-neutral-800 flex justify-between items-center max-w-screen-sm">

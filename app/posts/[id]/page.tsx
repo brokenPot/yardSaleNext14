@@ -10,6 +10,7 @@ import {CommentList} from "@/components/commentList";
 import Link from "next/link";
 import PostDeleteButton from "@/app/posts/[id]/edit/PostDeleteButton";
 import {getIsOwner} from "@/app/products/[id]/page";
+import ShowThumbsUpComp from "@/components/showThumbsUpComp";
 
 export default async function PostDetail({params,}: {
     params: { id: string };
@@ -70,7 +71,9 @@ export default async function PostDetail({params,}: {
                     <EyeIcon className="size-5"/>
                     <span>조회 {post.views}</span>
                 </div>
-                <LikeButton isLiked={isLiked} likeCount={likeCount} postId={id}/>
+
+                {isOwner ? (<ShowThumbsUpComp likeCount={likeCount} />) : (<LikeButton isLiked={isLiked} likeCount={likeCount} targetId={id}/>)}
+
                 <CommentList postId={post.id} sessionId={session.id!} allComments={allComments} me={me}/>
             </div>
         </div>

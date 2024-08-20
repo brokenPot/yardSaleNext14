@@ -41,7 +41,7 @@ export default  function Item({id,title,image,price,isOwner}: ItemProps) {
     return (
         <div
             onMouseLeave={handleMouseLeave}
-            className="flex px-4 pt-5 cursor-pointer justify-between " >
+            className="flex px-4 h-38 cursor-pointer justify-between  mb-2" >
                 <Link href={`/products/${id}`}>
                     <div className="flex space-x-4">
                         <Image
@@ -58,7 +58,7 @@ export default  function Item({id,title,image,price,isOwner}: ItemProps) {
                         </div>
                     </div>
                 </Link>
-            <div className="w-10  flex flex-col justify-between items-end relative">
+            <div className="w-10  flex items-center justify-end relative  flex">
                 {isOwner &&
                     <CiMenuKebab
                         onMouseEnter={handleMouseEnter}

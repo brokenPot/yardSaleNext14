@@ -11,27 +11,28 @@ datasource db {
 
 // 주석 처리 된 키 삽입하는 것 보류 
 model User {
-  id         Int        @id @default(autoincrement())
-  phone      String?    @unique
-  email      String?    @unique
-  password   String?
-  github_id  String?    @unique
-  name       String     @unique
-  avatar     String?
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  introduce  String?
-  tokens     Token[]
-  products   Product[]
-  posts      Post[]
+  id          Int           @id @default(autoincrement())
+  phone       String?       @unique
+  email       String?       @unique
+  password    String?
+  github_id   String?       @unique
+  name        String        @unique
+  avatar      String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  introduce   String?
+  tokens      Token[]
+  products    Product[]
+  posts       Post[]
   // streams   Stream[]
-  SMSToken   SMSToken[]
+  SMSToken    SMSToken[]
   // Comment   Comment[]
   // Like      Like[]
-  comments   Comment[]
-  likes      Like[]
-  chat_rooms ChatRoom[]
-  messages   Message[]
+  comments    Comment[]
+  likes       Like[]
+  chat_rooms  ChatRoom[]
+  messages    Message[]
+  productLike productLike[]
 }
 
 model Token {
@@ -57,16 +58,17 @@ model SMSToken {
 }
 
 model Product {
-  id          Int        @id @default(autoincrement())
-  title       String
-  price       Float
-  image       String
-  description String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int
-  ChatRoom    ChatRoom[]
+  id           Int           @id @default(autoincrement())
+  title        String
+  price        Float
+  image        String
+  description  String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int
+  ChatRoom     ChatRoom[]
+  productLikes productLike[]
 
   @@index([userId])
 }
@@ -104,6 +106,17 @@ model Like {
   postId     Int
 
   @@id(name: "id", [userId, postId])
+}
+
+model productLike {
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId     Int
+  productId  Int
+
+  @@id(name: "id", [userId, productId])
 }
 
 // model Answer {
