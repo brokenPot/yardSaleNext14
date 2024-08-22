@@ -5,6 +5,7 @@ import FormButton from "@/components/form-btn";
 import Image from "next/image";
 import Item from "@/components/item";
 import {getIsOwner} from "@/app/products/[id]/page";
+import KakaoMap from "@/app/(tabs)/profile/KakaoMap";
 
 interface userType {
     id: number,
@@ -143,6 +144,7 @@ export default async function Profile() {
                         />
                 )))
                 : <div>판매하는 상품이 없습니다</div>}
+            <KakaoMap/>
         </div>
     )
         ;

@@ -24,8 +24,7 @@ export default  function  EditProfileComp ({avatar, name,phone,email}:UserDataTy
             target: { files },
         } = event;
         if (!files) return;
-        const file = files[0];
-        const url = URL.createObjectURL(file);
+        const url = URL.createObjectURL(files[0]);
         setPreview(url);
     };
 
@@ -65,12 +64,14 @@ export default  function  EditProfileComp ({avatar, name,phone,email}:UserDataTy
                     required
                     type="text"
                     defaultValue={name}
+                    placeholder={'이름'}
                     name="name"
                     errors={state?.fieldErrors.name}
                 />
                 <_Input
                     type="email"
                     defaultValue={email}
+                    placeholder={'이메일'}
                     name="email"
                     errors={state?.fieldErrors.email}
                 />
@@ -78,6 +79,7 @@ export default  function  EditProfileComp ({avatar, name,phone,email}:UserDataTy
                     required
                     type="number"
                     defaultValue={phone}
+                    placeholder={'전화번호'}
                     name="phone"
                     errors={state?.fieldErrors.phone}
                 />

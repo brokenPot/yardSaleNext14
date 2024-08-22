@@ -12,7 +12,6 @@ export default async function Modal({ params }: { params: { id: string } }) {
     if (!product) {
         return notFound();
     }
-    // console.log(product)
     return (
         <div
             className="absolute top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-60">
