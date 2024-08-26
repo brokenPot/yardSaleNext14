@@ -6,8 +6,9 @@ declare let kakao: any;
 const KakaoMap = () => {
     const [map, setMap] = useState<any>();
     const [marker, setMarker] = useState<any>();
-    const [latitudes, setLatitude] = useState<string | null>(null);
-    const [longitudes, setLongitude] = useState<string | null>(null);
+    const [keyWord,setKeyWord ] = useState<string>("");
+    const [inputLatitude, setInputLatitude] = useState<string>('');
+    const [inputLongitude, setInputLongitude] = useState<string>('');
 
     useEffect(() => {
         const loadKakaoMapScript = () => {
@@ -20,44 +21,39 @@ const KakaoMap = () => {
 
         const initKakaoMap = () => {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(handleSuccess, handleError);
+                navigator.geolocation.getCurrentPosition(setupMap, handleError);
             }
         };
 
-        const handleSuccess = (position: GeolocationPosition) => {
-            const { latitude, longitude } = position.coords;
-            setLatitude(latitude.toString());
-            setLongitude(longitude.toString());
-
+        const setupMap = ({ coords: { latitude, longitude } }: GeolocationPosition) => {
             new kakao.maps.load(() => {
                 const container = document.getElementById('map');
-                const options = {
-                    center: new kakao.maps.LatLng(latitude, longitude),
-                    level: 3,
-                };
-                setMap(new kakao.maps.Map(container, options));
-                setMarker(new kakao.maps.Marker());
+                if (container) {
+                    const options = {
+                        center: new kakao.maps.LatLng(latitude, longitude),
+                        level: 3,
+                    };
+                    const newMap = new kakao.maps.Map(container, options);
+                    setMap(newMap);
 
-                if (container && latitude && longitude) {
-
-                    new kakao.maps.Map(container, options);
+                    const newMarker = new kakao.maps.Marker({
+                        position: new kakao.maps.LatLng(latitude, longitude),
+                        map: newMap,
+                    });
+                    setMarker(newMarker);
                 }
             });
         };
 
-
         const handleError = (error: GeolocationPositionError) => {
             console.error('Geolocation error:', error);
         };
-
         loadKakaoMapScript();
-    }, [latitudes, longitudes]);
+    }, [ ]);
 
-
-    const getCurrentPosBtn = () => {
-        console.log('!')
+    const updateCurrentPosition = () => {
         navigator.geolocation.getCurrentPosition(
-            getPosSuccess,
+            updatePositionOnMap,
             () => alert("위치 정보를 가져오는데 실패했습니다."),
             {
                 enableHighAccuracy: true,
@@ -66,59 +62,103 @@ const KakaoMap = () => {
             }
         );
     }
-    const getPosSuccess = (pos: GeolocationPosition) => {
-        // 현재 위치(위도, 경도) 가져온다.
-        var currentPos = new kakao.maps.LatLng(
-            pos.coords.latitude, // 위도
-            pos.coords.longitude // 경도
-        );
-        console.log(currentPos)
-        setLatitude(currentPos.La.toString());
-        setLongitude(currentPos.Ma.toString());
-        // 지도를 이동 시킨다.
-        // map.panTo(currentPos);
-        //
-        // // 기존 마커를 제거하고 새로운 마커를 넣는다.
-        // marker.setMap(null);
-        // marker.setPosition(currentPos);
-        // marker.setMap(map);
+    const updatePositionOnMap = ({ coords: { latitude, longitude } }: GeolocationPosition) => {
+        const currentPos = new kakao.maps.LatLng(latitude, longitude);
+        if (map && marker) {
+            map.panTo(currentPos);
+            marker.setPosition(currentPos);
+        }
     };
-    // Number(latitudes)
-    // Number(latitudes+"5")
-    //
-    // Number(longitudes)
-    // Number(longitudes+"4")
+    const updateMapWithInput = () => {
+        const lat = parseFloat(inputLatitude);
+        const lng = parseFloat(inputLongitude);
+
+        if (!isNaN(lat) && !isNaN(lng)) {
+            const newPos = new kakao.maps.LatLng(lat, lng);
+
+            if (map && marker) {
+                map.panTo(newPos);
+                marker.setPosition(newPos);
+            }
+        } else {
+            alert("유효한 위도와 경도를 입력하세요.");
+        }
+    };
+
+    function keywordSearch( ) {
+        const ps = new kakao.maps.services.Places(); // 장소 검색 객체를 생성합니다
+        ps.keywordSearch(keyWord, placesSearchCB);
+    }
+
+    function placesSearchCB(data:any, status:any) {
+        if (status === kakao.maps.services.Status.OK) {
+            const bounds = new kakao.maps.LatLngBounds(); // 지도 범위를 재설정하기 위해 LatLngBounds 객체에 좌표를 추가합니다
+
+            data.forEach((place:any) => {
+                displayMarker(place);
+                bounds.extend(new kakao.maps.LatLng(place.y, place.x));
+            });
+
+            map.setBounds(bounds); // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+        }
+    }
+    // 지도에 마커를 표시하는 함수입니다
+    function displayMarker(place:any) {
+        const newMarker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(place.y, place.x)
+        });
+        kakao.maps.event.addListener(newMarker, 'click', () => {
+            const infowindow = new kakao.maps.InfoWindow({
+                content: `<div style="padding:5px;font-size:12px;">${place.place_name}</div>`,
+            });
+            infowindow.open(map, newMarker);
+        });
+    }
         return (
             <div>
-                {/*<Map*/}
-                {/*    center={{ lat: 33.5563, lng: 126.79581 }}*/}
-                {/*    style={{ width: "100%", height: "360px" }}*/}
-                {/*>*/}
-                {/*    <MapMarker position={{lat: 33.55635, lng: 126.795841}}>*/}
-                {/*        <div*/}
-                {/*            style={{*/}
-                {/*                color: '#9971ff',*/}
-                {/*                fontSize: '19px',*/}
-                {/*                fontWeight: '700',*/}
-                {/*                border: '4px solid #9971ff',*/}
-                {/*                borderRadius: '10px',*/}
-                {/*                padding: '2.5px',*/}
-                {/*            }}*/}
-                {/*        >*/}
-                {/*            🎬 small box 🎬*/}
-                {/*        </div>*/}
-                {/*    </MapMarker>*/}
-                {/*</Map>*/}
-
-                <div className="flex items-center justify-center pt-2">
-
+                <div>
+                    <input
+                        type="text"
+                        placeholder="위도"
+                        value={inputLatitude}
+                        onChange={(e) => setInputLatitude(e.target.value)}
+                        className="border rounded-md p-2 mr-2 text-black"
+                    />
+                    <input
+                        type="text"
+                        placeholder="경도"
+                        value={inputLongitude}
+                        onChange={(e) => setInputLongitude(e.target.value)}
+                        className="border rounded-md p-2 mr-2 text-black"
+                    />
+                    <button
+                        onClick={updateMapWithInput}
+                        className="bg-green-500 px-5 py-2.5 rounded-md text-white font-semibold"
+                    >
+                        위치 이동
+                    </button>
+                </div>
+                <div>
+                    <input
+                        type="text"
+                        placeholder="키워드"
+                        value={keyWord}
+                        onChange={(e) => setKeyWord(e.target.value)}
+                        className="border rounded-md p-2 mr-2 text-black"
+                    />
+                    <button
+                        onClick={keywordSearch}
+                        className="bg-green-500 px-5 py-2.5 rounded-md text-white font-semibold"
+                    >
+                        키워드 검색
+                    </button>
+                </div>
                 <div id="map" className="w-[95%] h-72"/>
-                <button onClick={()=>{getCurrentPosBtn()}} className="mt-5 bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold">
+                <button onClick={updateCurrentPosition}
+                        className="mt-5 bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold">
                     현재 위치
                 </button>
-
-
-                </div>
             </div>
         );
 };
