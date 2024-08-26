@@ -18,14 +18,16 @@ const KakaoMap = () => {
             script.onload = initKakaoMap;
             document.head.appendChild(script);
         };
-
         const initKakaoMap = () => {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(setupMap, handleError);
+                navigator.geolocation.getCurrentPosition(setupMap, handleError,{
+                    enableHighAccuracy: true,
+                    maximumAge: 30000,
+                    timeout: 27000,
+                });
             }
         };
-
-        const setupMap = ({ coords: { latitude, longitude } }: GeolocationPosition) => {
+        const setupMap = ({ coords: { latitude, longitude }}: GeolocationPosition) => {
             new kakao.maps.load(() => {
                 const container = document.getElementById('map');
                 if (container) {
@@ -35,7 +37,6 @@ const KakaoMap = () => {
                     };
                     const newMap = new kakao.maps.Map(container, options);
                     setMap(newMap);
-
                     const newMarker = new kakao.maps.Marker({
                         position: new kakao.maps.LatLng(latitude, longitude),
                         map: newMap,
@@ -44,12 +45,11 @@ const KakaoMap = () => {
                 }
             });
         };
-
         const handleError = (error: GeolocationPositionError) => {
             console.error('Geolocation error:', error);
         };
         loadKakaoMapScript();
-    }, [ ]);
+    }, []);
 
     const updateCurrentPosition = () => {
         navigator.geolocation.getCurrentPosition(
@@ -72,10 +72,8 @@ const KakaoMap = () => {
     const updateMapWithInput = () => {
         const lat = parseFloat(inputLatitude);
         const lng = parseFloat(inputLongitude);
-
         if (!isNaN(lat) && !isNaN(lng)) {
             const newPos = new kakao.maps.LatLng(lat, lng);
-
             if (map && marker) {
                 map.panTo(newPos);
                 marker.setPosition(newPos);
