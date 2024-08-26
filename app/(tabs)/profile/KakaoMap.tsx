@@ -110,7 +110,7 @@ const KakaoMap = () => {
         });
         kakao.maps.event.addListener(newMarker, 'click', () => {
             const infowindow = new kakao.maps.InfoWindow({
-                content: `<div style="padding:5px;font-size:12px;">${place.place_name}</div>`,
+                content: `<div style="padding:5px; font-size:12px; color:black">${place.place_name}</div>`,
             });
             infowindow.open(map, newMarker);
         });
@@ -155,8 +155,10 @@ const KakaoMap = () => {
                     </button>
                 </div>
                 <div id="map" className="w-[95%] h-72"/>
-                <button onClick={updateCurrentPosition}
-                        className="mt-5 bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold">
+                <button
+                    onClick={updateCurrentPosition}
+                    className="mt-5 bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold"
+                >
                     현재 위치
                 </button>
             </div>
