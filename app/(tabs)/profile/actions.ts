@@ -20,6 +20,9 @@ export async function getUser() {
                 avatar:true,
                 phone:true,
                 email:true,
+                roadAddress:true,
+                lat:true,
+                lng:true,
                 products:{
                     select:{
                         id:true,
@@ -37,6 +40,33 @@ export async function getUser() {
     }
     notFound();
 }
+
+interface AddressData{
+    roadAddress: string | null;
+    lat: string | null;
+    lng: string | null;
+}
+
+export async function setUserAddress({roadAddress,lat,lng}:AddressData){
+    console.log(lat)
+    console.log(lng)
+
+    const session = await getSession();
+    if (session.id) {
+        await db.user.update({
+            where: {
+                id: Number(session.id),
+            },
+            data: {
+                roadAddress:roadAddress,
+                lat:lat,
+                lng:lng,
+            },
+        });
+        return roadAddress
+    }
+}
+
 
 export async function logOut(){
     const session = await getSession();

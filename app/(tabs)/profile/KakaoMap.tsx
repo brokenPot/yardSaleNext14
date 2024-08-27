@@ -1,15 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import {setUserAddress} from "@/app/(tabs)/profile/actions";
 declare let kakao: any;
 
-const KakaoMap = () => {
+const KakaoMap = ({roadAddress  ,latitude   ,longitude  }:{roadAddress :string | null ,latitude  :string | null  ,longitude:string | null  }) => {
     const [map, setMap] = useState<any>();
     const [marker, setMarker] = useState<any>();
     const [keyWord,setKeyWord ] = useState<string>("");
-    const [inputLatitude, setInputLatitude] = useState<string>('');
-    const [inputLongitude, setInputLongitude] = useState<string>('');
-
+    const [selectedRoadAddress, setSelectedRoadAddress]= useState<string | null>(roadAddress);
+    const [lat, setLat] = useState<string | null>(latitude)
+    const [lng, setLng] = useState<string | null>(longitude)
     useEffect(() => {
         const loadKakaoMapScript = () => {
             const script = document.createElement('script');
@@ -32,13 +33,13 @@ const KakaoMap = () => {
                 const container = document.getElementById('map');
                 if (container) {
                     const options = {
-                        center: new kakao.maps.LatLng(latitude, longitude),
+                        center: new kakao.maps.LatLng(lat!=='' ? parseFloat(lat || "") : latitude+0.01, lng!=='' ? parseFloat(lng || "") : longitude-0.006),
                         level: 3,
                     };
                     const newMap = new kakao.maps.Map(container, options);
                     setMap(newMap);
                     const newMarker = new kakao.maps.Marker({
-                        position: new kakao.maps.LatLng(latitude, longitude),
+                        position: new kakao.maps.LatLng(lat!=='' ? parseFloat(lat || "") : latitude+0.01, lng!=='' ? parseFloat(lng || "") : longitude-0.006),
                         map: newMap,
                     });
                     setMarker(newMarker);
@@ -49,7 +50,7 @@ const KakaoMap = () => {
             console.error('Geolocation error:', error);
         };
         loadKakaoMapScript();
-    }, []);
+    }, [lat,lng]);
 
     const updateCurrentPosition = () => {
         navigator.geolocation.getCurrentPosition(
@@ -62,24 +63,17 @@ const KakaoMap = () => {
             }
         );
     }
+
+    const saveSelectedPosition = async () => {
+         const roadAddress = await setUserAddress({roadAddress : selectedRoadAddress,lat,lng});
+         window.alert(roadAddress + "주소 업데이트")
+    }
+
     const updatePositionOnMap = ({ coords: { latitude, longitude } }: GeolocationPosition) => {
-        const currentPos = new kakao.maps.LatLng(latitude, longitude);
+        const currentPos = new kakao.maps.LatLng(latitude+0.01, longitude-0.006);
         if (map && marker) {
             map.panTo(currentPos);
             marker.setPosition(currentPos);
-        }
-    };
-    const updateMapWithInput = () => {
-        const lat = parseFloat(inputLatitude);
-        const lng = parseFloat(inputLongitude);
-        if (!isNaN(lat) && !isNaN(lng)) {
-            const newPos = new kakao.maps.LatLng(lat, lng);
-            if (map && marker) {
-                map.panTo(newPos);
-                marker.setPosition(newPos);
-            }
-        } else {
-            alert("유효한 위도와 경도를 입력하세요.");
         }
     };
 
@@ -91,12 +85,10 @@ const KakaoMap = () => {
     function placesSearchCB(data:any, status:any) {
         if (status === kakao.maps.services.Status.OK) {
             const bounds = new kakao.maps.LatLngBounds(); // 지도 범위를 재설정하기 위해 LatLngBounds 객체에 좌표를 추가합니다
-
             data.forEach((place:any) => {
                 displayMarker(place);
                 bounds.extend(new kakao.maps.LatLng(place.y, place.x));
             });
-
             map.setBounds(bounds); // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
         }
     }
@@ -107,6 +99,10 @@ const KakaoMap = () => {
             position: new kakao.maps.LatLng(place.y, place.x)
         });
         kakao.maps.event.addListener(newMarker, 'click', () => {
+            setSelectedRoadAddress(place.road_address_name)
+            setLat(place.y) // y 위도 latitude
+            setLng(place.x) // x 경도 longitude
+            window.alert(place.road_address_name + "주소 저장 버튼 누를 시 저장 주소 변경 및 추가")
             const infowindow = new kakao.maps.InfoWindow({
                 content: `<div style="padding:5px; font-size:12px; color:black">${place.place_name}</div>`,
             });
@@ -115,28 +111,6 @@ const KakaoMap = () => {
     }
         return (
             <div>
-                <div>
-                    <input
-                        type="text"
-                        placeholder="위도"
-                        value={inputLatitude}
-                        onChange={(e) => setInputLatitude(e.target.value)}
-                        className="border rounded-md p-2 mr-2 text-black"
-                    />
-                    <input
-                        type="text"
-                        placeholder="경도"
-                        value={inputLongitude}
-                        onChange={(e) => setInputLongitude(e.target.value)}
-                        className="border rounded-md p-2 mr-2 text-black"
-                    />
-                    <button
-                        onClick={updateMapWithInput}
-                        className="bg-green-500 px-5 py-2.5 rounded-md text-white font-semibold"
-                    >
-                        위치 이동
-                    </button>
-                </div>
                 <div>
                     <input
                         type="text"
@@ -158,6 +132,12 @@ const KakaoMap = () => {
                     className="mt-5 bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold"
                 >
                     현재 위치
+                </button>
+                <button
+                    onClick={saveSelectedPosition}
+                    className="ml-5 mt-5 bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold"
+                >
+                    주소 저장
                 </button>
             </div>
         );

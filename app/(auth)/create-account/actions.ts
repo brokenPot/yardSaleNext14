@@ -109,6 +109,9 @@ export async function createAccount(_: any, formData: FormData) {
                 name: result.data.name,
                 email: result.data.email,
                 password: hashedPassword,
+                roadAddress:"",
+                lat:"",
+                lng:"",
             },
             select: {
                 id: true,

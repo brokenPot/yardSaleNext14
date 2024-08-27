@@ -25,7 +25,5 @@ import Layout from "@/components/LayoutFrame";
           <ChatMessagesList chatRoomId={params.id} userId={session.id!} username={user.name}
                             avatar={user.avatar!} initialMessages={setReadMessages} />
         </Layout>
-
-
     );
 }

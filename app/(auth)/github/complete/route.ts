@@ -27,6 +27,9 @@ export async function GET(request: NextRequest) {
             name: `${login}${id && `-${id}`}${email && `-${email.split("@").at(0)}`}`,
             github_id: id + "",
             avatar: avatar_url,
+            roadAddress:"",
+            lat:"",
+            lng:"",
         },
         select: {
             id: true,

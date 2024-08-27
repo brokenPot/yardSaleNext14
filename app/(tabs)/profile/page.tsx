@@ -7,13 +7,16 @@ import Item from "@/components/item";
 import {getIsOwner} from "@/app/products/[id]/page";
 import KakaoMap from "@/app/(tabs)/profile/KakaoMap";
 
-interface userType {
+export interface userType {
     id: number,
     phone: string | null,
     email: string | null,
     name: string,
     avatar: string | null,
     createdAt: Date,
+    roadAddress:string | null ,
+    lat:string | null,
+    lng:string | null,
     products: {id: number, title: string, price: number, image: string, userId: number}[]
 }
 
@@ -144,7 +147,7 @@ export default async function Profile() {
                         />
                 )))
                 : <div>판매하는 상품이 없습니다</div>}
-            <KakaoMap/>
+            <KakaoMap roadAddress={user.roadAddress} latitude={user.lat} longitude={user.lng} />
         </div>
     )
         ;
