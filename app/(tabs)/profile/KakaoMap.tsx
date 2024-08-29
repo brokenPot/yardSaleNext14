@@ -11,6 +11,7 @@ const KakaoMap = ({roadAddress  ,latitude   ,longitude  }:{roadAddress :string |
     const [selectedRoadAddress, setSelectedRoadAddress]= useState<string | null>(roadAddress);
     const [lat, setLat] = useState<string | null>(latitude)
     const [lng, setLng] = useState<string | null>(longitude)
+
     useEffect(() => {
         const loadKakaoMapScript = () => {
             const script = document.createElement('script');
@@ -110,7 +111,7 @@ const KakaoMap = ({roadAddress  ,latitude   ,longitude  }:{roadAddress :string |
         });
     }
         return (
-            <div>
+            <div className="px-4 space-y-4">
                 <div>
                     <input
                         type="text"

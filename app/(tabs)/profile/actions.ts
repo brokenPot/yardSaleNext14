@@ -48,9 +48,6 @@ interface AddressData{
 }
 
 export async function setUserAddress({roadAddress,lat,lng}:AddressData){
-    console.log(lat)
-    console.log(lng)
-
     const session = await getSession();
     if (session.id) {
         await db.user.update({

@@ -140,6 +140,7 @@ export default async function ProductDetail({
                 </Link>
                 <div>
                     <h3>{product.user.name}</h3>
+                    <h3>{product.user.roadAddress}</h3>
                 </div>
             </div>
             <div className="flex w-full justify-between align-middle">

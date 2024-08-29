@@ -1,6 +1,8 @@
 // import getSession from "@/lib/session";
 import EditProfileComp from "@/app/(tabs)/profile/edit/EditProfileComp";
 import {getUser} from "@/app/(tabs)/profile/actions";
+import KakaoMap from "@/app/(tabs)/profile/KakaoMap";
+import React from "react";
 
 
 export default async function  EditProfile ({
@@ -18,6 +20,7 @@ export default async function  EditProfile ({
                              phone={userData.phone!}
                              email={userData.email!}
             />
+            <KakaoMap roadAddress={userData.roadAddress} latitude={userData.lat} longitude={userData.lng} />
         </div>
     );
 };

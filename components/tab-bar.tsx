@@ -18,7 +18,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function TabBar() {
-    const pathname = usePathname();
+    const pathname = usePathname(); // 현재 위치한 path를 알고 싶을때
     return (
         <div
             className="fixed bottom-0 w-full mx-auto max-w-screen-sm grid grid-cols-5 border-neutral-600 border-t px-5 py-3 *:text-white bg-neutral-800">

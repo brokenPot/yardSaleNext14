@@ -24,6 +24,7 @@ export async function getProduct(id: number) {
                     name: true,
                     avatar: true,
                     chat_rooms: true,
+                    roadAddress:true
                 },
             },
             ChatRoom: {
