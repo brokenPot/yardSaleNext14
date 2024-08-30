@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto, Rubik_Scribble } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+// import Script from "next/script";
 
 const roboto = Roboto({
     subsets: ["latin"],
@@ -37,10 +38,16 @@ export default function RootLayout({
 }>) {
   return (
       <html lang="en">
-      <body className={`${roboto.variable} ${rubick.variable} ${metallica.variable}  bg-neutral-900 text-white max-w-screen-sm mx-auto`}
+      <body
+          className={`${roboto.variable} ${rubick.variable} ${metallica.variable}  bg-neutral-900 text-white max-w-screen-sm mx-auto`}
       >
       {children}
       </body>
+      {/*<Script src="https://developers.kakao.com/sdk/js/kakao.js" async />*/}
+      {/*<Script*/}
+      {/*    type="text/javascript"*/}
+      {/*    src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAOMAP_KEY}&autoload=false&libraries=services,clusterer`}*/}
+      {/*/>*/}
       </html>
   );
 }

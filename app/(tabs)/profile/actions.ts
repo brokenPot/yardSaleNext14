@@ -43,11 +43,11 @@ export async function getUser() {
 
 interface AddressData{
     roadAddress: string | null;
-    lat: string | null;
-    lng: string | null;
+    latitude: string | null;
+    longitude: string | null;
 }
 
-export async function setUserAddress({roadAddress,lat,lng}:AddressData){
+export async function setUserAddress({roadAddress,latitude,longitude}:AddressData){
     const session = await getSession();
     if (session.id) {
         await db.user.update({
@@ -56,8 +56,8 @@ export async function setUserAddress({roadAddress,lat,lng}:AddressData){
             },
             data: {
                 roadAddress:roadAddress,
-                lat:lat,
-                lng:lng,
+                lat:latitude ,
+                lng:longitude,
             },
         });
         return roadAddress

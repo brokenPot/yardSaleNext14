@@ -2,13 +2,16 @@
 
 import React, { useEffect, useState } from 'react';
 import {setUserAddress} from "@/app/(tabs)/profile/actions";
+import { Map } from "react-kakao-maps-sdk";
+import {KakaoKeywordMapProps} from "@/app/(tabs)/profile/KakaoKeywordMap";
 declare let kakao: any;
 
-const KakaoMap = ({roadAddress  ,latitude   ,longitude  }:{roadAddress :string | null ,latitude  :string | null  ,longitude:string | null  }) => {
+const KakaoMap = ({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMapProps) => {
     const [map, setMap] = useState<any>();
     const [marker, setMarker] = useState<any>();
     const [keyWord,setKeyWord ] = useState<string>("");
     const [selectedRoadAddress, setSelectedRoadAddress]= useState<string | null>(roadAddress);
+    const [scriptLoad, setScriptLoad] = useState<boolean>(false);
     const [lat, setLat] = useState<string | null>(latitude)
     const [lng, setLng] = useState<string | null>(longitude)
 
@@ -18,6 +21,9 @@ const KakaoMap = ({roadAddress  ,latitude   ,longitude  }:{roadAddress :string |
             script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAOMAP_KEY}&autoload=false&libraries=services,clusterer`;
             script.async = true;
             script.onload = initKakaoMap;
+            script.addEventListener("load", () => {
+                setScriptLoad(true);
+            })
             document.head.appendChild(script);
         };
         const initKakaoMap = () => {
@@ -34,13 +40,13 @@ const KakaoMap = ({roadAddress  ,latitude   ,longitude  }:{roadAddress :string |
                 const container = document.getElementById('map');
                 if (container) {
                     const options = {
-                        center: new kakao.maps.LatLng(lat!=='' ? parseFloat(lat || "") : latitude+0.01, lng!=='' ? parseFloat(lng || "") : longitude-0.006),
+                        center: new kakao.maps.LatLng(lat ? lat : latitude+0.01, lng ? lng : longitude-0.006),
                         level: 3,
                     };
                     const newMap = new kakao.maps.Map(container, options);
                     setMap(newMap);
                     const newMarker = new kakao.maps.Marker({
-                        position: new kakao.maps.LatLng(lat!=='' ? parseFloat(lat || "") : latitude+0.01, lng!=='' ? parseFloat(lng || "") : longitude-0.006),
+                        position: new kakao.maps.LatLng(lat  ? lat : latitude+0.01, lng ? lng : longitude-0.006),
                         map: newMap,
                     });
                     setMarker(newMarker);
@@ -66,7 +72,7 @@ const KakaoMap = ({roadAddress  ,latitude   ,longitude  }:{roadAddress :string |
     }
 
     const saveSelectedPosition = async () => {
-         const roadAddress = await setUserAddress({roadAddress : selectedRoadAddress,lat,lng});
+         const roadAddress = await setUserAddress({roadAddress : selectedRoadAddress,latitude: lat,longitude: lng});
          window.alert(roadAddress + "주소 업데이트")
     }
 
@@ -112,34 +118,50 @@ const KakaoMap = ({roadAddress  ,latitude   ,longitude  }:{roadAddress :string |
     }
         return (
             <div className="px-4 space-y-4">
-                <div>
+                <div className="flex justify-evenly items-center">
                     <input
                         type="text"
                         placeholder="키워드"
                         value={keyWord}
                         onChange={(e) => setKeyWord(e.target.value)}
-                        className="border rounded-md p-2 mr-2 text-black"
+                        className="border rounded-md p-2 mr-2 text-black w-[60%]"
                     />
                     <button
                         onClick={keywordSearch}
-                        className="bg-green-500 px-5 py-2.5 rounded-md text-white font-semibold"
+                        className="bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold w-[25%]"
                     >
                         키워드 검색
                     </button>
                 </div>
-                <div id="map" className="w-[95%] h-72"/>
-                <button
-                    onClick={updateCurrentPosition}
-                    className="mt-5 bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold"
-                >
-                    현재 위치
-                </button>
-                <button
-                    onClick={saveSelectedPosition}
-                    className="ml-5 mt-5 bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold"
-                >
-                    주소 저장
-                </button>
+                {scriptLoad ?
+                    <Map
+                        id="map"
+                        center={{ lat: 33.5563, lng: 126.79581 }}
+                        className="w-[100%] h-72"
+                        // style={{ width: '800px', height: '600px' }}
+                        level={3}>
+                    </Map>
+                    :
+                    <div></div>
+                }
+                {/*<div id="map" className="w-[100%] h-72"/>*/}
+                <div className="flex justify-evenly items-center">
+                    <div className="flex items-center mt-5">
+                        {roadAddress}
+                    </div>
+                    <button
+                        onClick={updateCurrentPosition}
+                        className="mt-5 bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold"
+                    >
+                        현재 위치
+                    </button>
+                    <button
+                        onClick={saveSelectedPosition}
+                        className="ml-5 mt-5 bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold"
+                    >
+                        주소 저장
+                    </button>
+                </div>
             </div>
         );
 };
