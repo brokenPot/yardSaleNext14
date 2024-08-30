@@ -21,8 +21,8 @@ function KakaoKeywordMap({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMap
     const [searchInput, setSearchInput] = useState('');
     const [keyword, setKeyword] = useState('');
     const [selectedPlace, setSelectedPlace] = useState();
-    const [lat, setLat] = useState<number | null>(latitude !== null ? parseFloat(latitude) : 0 )
-    const [lng, setLng] = useState<number | null>( longitude !== null ? parseFloat(longitude) : 0 )
+    const [lat, setLat] = useState<number | null>(latitude !== null ? parseFloat(latitude) : null )
+    const [lng, setLng] = useState<number | null>( longitude !== null ? parseFloat(longitude) : null )
 
     const markerImageSrc =
         'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png';
@@ -66,7 +66,6 @@ function KakaoKeywordMap({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMap
                         center: new kakao.maps.LatLng(lat ? lat : latitude+0.01, lng ? lng : longitude-0.006),
                         level: 3,
                     };
-                    console.log(options)
                     const newMap = new kakao.maps.Map(container, options);
                     setMap(newMap);
                     const newMarker = new kakao.maps.Marker({
@@ -75,6 +74,8 @@ function KakaoKeywordMap({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMap
                     });
                     setMarker(newMarker);
                 }
+                setLat(latitude+0.01)
+                setLng(longitude-0.006)
             });
         };
         const handleError = (error: GeolocationPositionError) => {
