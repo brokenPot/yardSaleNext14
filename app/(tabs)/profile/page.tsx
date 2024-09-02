@@ -19,7 +19,7 @@ export interface userType {
     products: {id: number, title: string, price: number, image: string, userId: number}[]
 }
 
-async function  MiniProfile({user}:{user:userType}  ) {
+async function  MiniProfile({user}:{user:userType}) {
     return (
             <div className="flex justify-between items-center">
                 <div className="flex items-center mt-4 space-x-3">

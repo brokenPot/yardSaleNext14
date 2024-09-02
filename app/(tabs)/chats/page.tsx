@@ -58,9 +58,9 @@ export default async function Chat() {
                                 </div>
                             </div>
                             <div className="flex items-center justify-end gap-3 ">
-                <span className="text-white">
-                  {formatToTimeAgo(room.messages[0]?.created_at.toString())}
-                </span>
+                            <span className="text-white">
+                              {formatToTimeAgo(room.messages[0]?.created_at.toString())}
+                            </span>
                                 {unReadCount == 0 ? null : (
                                     <div className="badge bg-orange-400 text-white rounded-md">{`+${unReadCount}`}</div>
                                 )}

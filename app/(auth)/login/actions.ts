@@ -15,11 +15,6 @@ const checkEmailExists = async (email: string) => {
             id: true,
         },
     });
-    // if(user){
-    //   return true
-    // } else {
-    //   return false
-    // }
     return Boolean(user);
 };
 const formSchema = z.object({

@@ -14,15 +14,15 @@ export interface KakaoKeywordMapProps {
 
 function KakaoKeywordMap({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMapProps) {
     const [map, setMap] = useState<any>();
-    const [marker, setMarker] = useState<any>();
+    // const [marker, setMarker] = useState<any>();
     const [markers, setMarkers] = useState<any[]>([]);
     const [places, setPlaces] = useState<any[]>([]);
     const [scriptLoad, setScriptLoad] = useState<boolean>(false);
     const [searchInput, setSearchInput] = useState('');
     const [keyword, setKeyword] = useState('');
-    const [selectedPlace, setSelectedPlace] = useState();
-    const [lat, setLat] = useState<number | null>(latitude !== null ? parseFloat(latitude) : null )
-    const [lng, setLng] = useState<number | null>( longitude !== null ? parseFloat(longitude) : null )
+    // const [selectedPlace, setSelectedPlace] = useState();
+    const [lat, ] = useState<number | null>(latitude !== null ? parseFloat(latitude) : null )
+    const [lng, ] = useState<number | null>( longitude !== null ? parseFloat(longitude) : null )
 
     const markerImageSrc =
         'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png';
@@ -68,14 +68,12 @@ function KakaoKeywordMap({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMap
                     };
                     const newMap = new kakao.maps.Map(container, options);
                     setMap(newMap);
-                    const newMarker = new kakao.maps.Marker({
-                        position: new kakao.maps.LatLng(lat  ? lat : latitude+0.01, lng ? lng : longitude-0.006),
-                        map: newMap,
-                    });
-                    setMarker(newMarker);
+                    // const newMarker = new kakao.maps.Marker({
+                    //     position: new kakao.maps.LatLng(lat  ? lat : latitude+0.01, lng ? lng : longitude-0.006),
+                    //     map: newMap,
+                    // });
+                    // setMarker(newMarker);
                 }
-                // setLat(latitude+0.01)
-                // setLng(longitude-0.006)
             });
         };
         const handleError = (error: GeolocationPositionError) => {
@@ -138,7 +136,7 @@ function KakaoKeywordMap({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMap
                 }}
                 onClick={(marker) => {
                     map.panTo(marker.getPosition());
-                    setSelectedPlace(places[i]);
+                    // setSelectedPlace(places[i]);
                 }}
                 onMouseOver={() => setIsVisible(true)}
                 onMouseOut={() => setIsVisible(false)}
@@ -211,7 +209,7 @@ function KakaoKeywordMap({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMap
                                                 markers[i].position.lng
                                             )
                                         );
-                                        setSelectedPlace(item);
+                                        // setSelectedPlace(item);
                                         saveSelectedPosition({
                                             roadAddress: item.road_address_name,
                                             latitude: item.y,

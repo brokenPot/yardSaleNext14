@@ -48,7 +48,6 @@ export async function countUnreadMessages(id: number | undefined) {
             isRead: false,
         },
     });
-
     return unreadCount;
 }
 
