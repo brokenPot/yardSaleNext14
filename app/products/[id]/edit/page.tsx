@@ -1,6 +1,6 @@
 import { unstable_cache as nextCache } from "next/cache";
 import { notFound } from "next/navigation";
-import EditProductForm from "./edit-product-form";
+import EditProductForm from "./comps/edit-product-form";
 import {getProduct} from "@/app/(tabs)/home/@modal/(...)products/[id]/actions";
 
 const getCachedProduct = nextCache(getProduct, ["product-detail"], {

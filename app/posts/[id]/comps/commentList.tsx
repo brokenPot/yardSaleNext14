@@ -3,7 +3,7 @@
 import { createComment } from "@/app/posts/[id]/actions";
 import { formatToTimeAgo } from "@/lib/utils";
 import {Suspense, useOptimistic, useRef, useTransition} from "react";
-import { AddComment } from "./add-comment";
+import { AddComment } from "@/components/add-comment";
 import Comments from "@/components/comments";
 
 interface ICommentListProps {

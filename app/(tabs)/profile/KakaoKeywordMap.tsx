@@ -74,15 +74,15 @@ function KakaoKeywordMap({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMap
                     });
                     setMarker(newMarker);
                 }
-                setLat(latitude+0.01)
-                setLng(longitude-0.006)
+                // setLat(latitude+0.01)
+                // setLng(longitude-0.006)
             });
         };
         const handleError = (error: GeolocationPositionError) => {
             console.error('Geolocation error:', error);
         };
         loadKakaoMapScript();
-    }, [ lng,lat]);
+    }, [lng, lat]);
 
     useEffect(() => {
         if (!map) return;

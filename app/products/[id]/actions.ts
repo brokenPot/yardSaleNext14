@@ -4,6 +4,7 @@ import db from "@/lib/db";
 import {unstable_cache as nextCache} from "next/dist/server/web/spec-extension/unstable-cache";
 import getSession from "@/lib/session";
 import {revalidateTag} from "next/cache";
+import {notFound} from "next/navigation";
 
 export async function getProduct(id: number) {
     // nextJs의 fetch는 자동으로 cache된다. 태그 옵션도 설정 가능하다.
@@ -152,3 +153,39 @@ export async function generateStaticParams() {
     });
     return products.map((product) => ({id: product.id + ""}));
 }
+
+
+// export const getCachedProductTitle = nextCache(getProductTitle, ["product-title"], {
+//     tags: ["product-title", "product-detail"],
+// });
+
+export async function getIsOwner(userId: number) {
+    const session = await getSession();
+    return session.id === userId;
+}
+
+export async function generateMetadata(id: number) {
+    const product = await getCachedProductTitle(id);
+    return {
+        title: product?.title,
+    };
+}
+
+export async function fetchProductDetails(id: number) {
+    if (isNaN(id)) {
+        return notFound();
+    }
+    const product = await getProduct(id);
+    if (!product) {
+        return notFound();
+    }
+    const { likeCount, isLiked } = await getCachedProductLikesStatus(id);
+    const isOwner = await getIsOwner(product.userId);
+
+    return { product, likeCount, isLiked, isOwner };
+}
+
+export async function revalidateProductTitle() {
+    revalidateTag("product-title");
+}
+

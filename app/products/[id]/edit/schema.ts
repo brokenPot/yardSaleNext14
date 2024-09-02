@@ -17,11 +17,3 @@ export const productSchema = z.object({
 });
 
 export type ProductType = z.infer<typeof productSchema>;
-
-// export interface ProductType {
-//     productId: Number,
-//     image: any,
-//     title: string,
-//     description: string,
-//     price: Number,
-// }

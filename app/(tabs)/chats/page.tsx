@@ -49,8 +49,8 @@ export default async function Chat() {
                                             <div className="size-8 rounded-full bg-slate-400"></div>
                                         )}
                                         <span className="text-xl text-white">
-                      {room.users[1].name}
-                    </span>
+                                            {room.users[1].name}
+                                        </span>
                                     </div>
                                     <div className="text-teal-500 text-sm">
                                         {room.messages[0]?.payload ?? null}

@@ -1,4 +1,4 @@
-import ProductList from "@/components/product-list";
+import ProductList from "@/app/(tabs)/home/comps/product-list";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { Prisma } from "@prisma/client";
 import Link from "next/link";

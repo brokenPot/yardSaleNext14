@@ -1,12 +1,12 @@
 "use client";
 
-import _Input from "@/components/input";
+import Input from "@/components/input";
 import {useState} from "react";
 import {ArrowPathIcon, PhotoIcon} from "@heroicons/react/24/solid";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { editProduct } from "./actions";
-import {productSchema,ProductType} from "./schema";
+import { editProduct } from "../actions";
+import {productSchema,ProductType} from "../schema";
 import {MB, PLZ_ADD_PHOTO} from "@/lib/constants";
 import ProductAddBtn from "@/components/productAddBtn";
 import { useRouter } from "next/navigation";
@@ -108,21 +108,21 @@ export default function EditProductForm({
                 accept="image/*"
                 className="hidden"
             />
-            <_Input
+            <Input
                 required
                 placeholder="제목"
                 type="text"
                 {...register("title")}
                 errors={[errors.title?.message ?? ""]}
             />
-            <_Input
+            <Input
                 type="number"
                 required
                 placeholder="가격"
                 {...register("price")}
                 errors={[errors.price?.message ?? ""]}
             />
-            <_Input
+            <Input
                 type="text"
                 required
                 placeholder="자세한 설명"

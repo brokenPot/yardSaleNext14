@@ -4,13 +4,13 @@ import { EyeIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import dog from "@/public/dog.jpg"
-import LikeButton from "@/components/like-button";
+import LikeButton from "@/app/posts/[id]/comps/like-button";
 import {getCachedComments, getCachedPost, getMe,getCachedLikeStatus} from "@/app/posts/[id]/actions";
-import {CommentList} from "@/components/commentList";
+import {CommentList} from "@/app/posts/[id]/comps/commentList";
 import Link from "next/link";
-import PostDeleteButton from "@/app/posts/[id]/edit/PostDeleteButton";
-import {getIsOwner} from "@/app/products/[id]/page";
-import ShowThumbsUpComp from "@/components/showThumbsUpComp";
+import PostDeleteButton from "@/app/posts/[id]/comps/PostDeleteButton";
+import {getIsOwner} from "@/app/products/[id]/actions";
+import ShowThumbsUpComp from "@/app/posts/[id]/comps/showThumbsUpComp";
 
 export default async function PostDetail({params,}: {
     params: { id: string };

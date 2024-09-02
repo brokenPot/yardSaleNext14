@@ -4,7 +4,7 @@ import Link from "next/link";
 import FormButton from "@/components/form-btn";
 import Image from "next/image";
 import Item from "@/components/item";
-import {getIsOwner} from "@/app/products/[id]/page";
+import {getIsOwner} from "@/app/products/[id]/actions";
 
 export interface userType {
     id: number,

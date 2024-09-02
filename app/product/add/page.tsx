@@ -1,6 +1,6 @@
 "use client";
 
-import _Input from "@/components/input";
+import Input from "@/components/input";
 import { PhotoIcon,ArrowPathIcon } from "@heroicons/react/24/solid";
 import {useState} from "react";
 import {uploadProduct} from "./actions";
@@ -88,21 +88,21 @@ export default function AddProduct() {
                     accept="image/*"
                     className="hidden"
                 />
-                <_Input
+                <Input
                     required
                     placeholder="제목"
                     type="text"
                     {...register("title")}
                     errors={[errors.title?.message ?? ""]}
                 />
-                <_Input
+                <Input
                     type="number"
                     required
                     placeholder="가격"
                     {...register("price")}
                     errors={[errors.price?.message ?? ""]}
                 />
-                <_Input
+                <Input
                     type="text"
                     required
                     placeholder="자세한 설명"

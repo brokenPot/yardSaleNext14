@@ -9,7 +9,6 @@ const initialState = {
   token: false,
   error: undefined,
 };
-
 export default function SMSLogin() {
   const [state, dispatch] = useFormState(smsLogIn, initialState);
   return (

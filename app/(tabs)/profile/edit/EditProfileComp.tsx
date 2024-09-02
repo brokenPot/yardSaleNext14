@@ -1,6 +1,6 @@
 "use client";
 
-import _Input from "@/components/input";
+import Input from "@/components/input";
 import {editUser} from "@/app/(tabs)/profile/edit/actions";
 import Image from "next/image";
 import {useFormState} from "react-dom";
@@ -60,7 +60,7 @@ export default  function  EditProfileComp ({avatar, name,phone,email}:UserDataTy
                     </label>
                     {state?.fieldErrors.avatar}
                 </div>
-                <_Input
+                <Input
                     required
                     type="text"
                     defaultValue={name}
@@ -68,14 +68,14 @@ export default  function  EditProfileComp ({avatar, name,phone,email}:UserDataTy
                     name="name"
                     errors={state?.fieldErrors.name}
                 />
-                <_Input
+                <Input
                     type="email"
                     defaultValue={email}
                     placeholder={'이메일'}
                     name="email"
                     errors={state?.fieldErrors.email}
                 />
-                <_Input
+                <Input
                     required
                     type="number"
                     defaultValue={phone}

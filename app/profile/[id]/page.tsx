@@ -2,7 +2,7 @@ import React from 'react';
 import Item from "@/components/item";
 import {getUserInfo} from "@/app/profile/[id]/actions";
 import Link from "next/link";
-import {getIsOwner} from "@/app/products/[id]/page";
+import {getIsOwner} from "@/app/products/[id]/actions";
 import {Product} from "@prisma/client";
 
 async function  Page({

@@ -2,65 +2,26 @@ import { formatToWon } from "@/lib/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Link from "next/link";
-import {notFound, redirect} from "next/navigation";
+import { redirect} from "next/navigation";
+
 import {
-    revalidateTag,
-} from "next/cache";
-import {
+    fetchProductDetails,
     FindRoomWithBothUsers,
-    getCachedProductLikesStatus,
-    getProduct,
-    getProductTitle
+     revalidateProductTitle
 } from "@/app/products/[id]/actions";
 import getSession from "@/lib/session";
-import { unstable_cache as nextCache } from "next/cache";
-import DeleteButton from "@/app/products/[id]/edit/delete-button";
+import DeleteButton from "@/app/products/[id]/edit/comps/delete-button";
 import db from "@/lib/db";
 import ProductLikeButton from "@/components/product-like-button";
 import ShowLikeComp from "@/components/showLikeComp";
-
-const getCachedProductTitle = nextCache(getProductTitle, ["product-title"], {
-    tags: ["product-title", "product-detail"],
-});
-
-export async function getIsOwner(userId: number) {
-    const session = await getSession();
-    if (session.id) {
-        return session.id === userId;
-    }
-    return false;
-}
-
-export async function generateMetadata({ params }: { params: { id: string } }) {
-    const product = await getCachedProductTitle(Number(params.id));
-    return {
-        title: product?.title,
-    };
-}
 
 export default async function ProductDetail({
                                                 params
                                             }: {
     params: { id: string };
 }) {
-    // const router = useRouter();
     const id = Number(params.id);
-    const { likeCount, isLiked } = await getCachedProductLikesStatus(id);
-
-    if (isNaN(id)) {
-        return notFound();
-    }
-    const product = await getProduct(id);
-    if (!product) {
-        return notFound();
-    }
-    const revalidate = async () => {
-        "use server";
-        // revalidateTag("product-title");
-
-        // getCachedProduct, getCachedProductTitle의 태그 배열에 "xxxx"가 있다면 캐시 새로고침
-        revalidateTag("product-title",);
-    };
+    const { product, likeCount, isLiked, isOwner } = await fetchProductDetails(id);
 
     const createChatRoom = async () => {
         "use server";
@@ -99,7 +60,6 @@ export default async function ProductDetail({
             redirect(`/chats/${room.id}`);
         }
     };
-    const isOwner = await getIsOwner(product.userId);
 
     return (
         <div className="pt-20 pb-40 relative">
@@ -159,7 +119,7 @@ export default async function ProductDetail({
         </span>
                 <section className="flex gap-2 items-center">
                     {isOwner && (
-                        <form action={revalidate}>
+                        <form action={revalidateProductTitle}>
                             <button className="bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold">
                                 Revalidate title cache
                             </button>

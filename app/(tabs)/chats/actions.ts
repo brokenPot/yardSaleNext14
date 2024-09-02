@@ -34,7 +34,6 @@ export async function getAllChatRoom() {
             },
         },
     });
-
     return rooms;
 }
 

@@ -1,10 +1,10 @@
 "use client";
 
-import _Input from "@/components/input";
+import Input from "@/components/input";
 import ProductAddBtn from "@/components/productAddBtn";
 import { useRouter } from "next/navigation";
 import {postSchema, PostType} from "@/app/life/add/schema";
-import { ProductType} from "@/app/products/[id]/edit/schema";
+import {ProductType} from "@/app/products/[id]/edit/schema";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {updatePost} from "@/app/posts/[id]/edit/actions";
@@ -44,14 +44,14 @@ export default function EditPostForm({
     return (
         <div>
             <form action={onValid}  className="p-5 flex flex-col gap-5">
-                <_Input
+                <Input
                     type="text"
                     required
                     defaultValue={title}
                     {...register("title")}
                     errors={[errors.title?.message ?? ""]}
                 />
-                <_Input
+                <Input
                     type="text"
                     required
                     defaultValue={description}

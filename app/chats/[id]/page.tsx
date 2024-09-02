@@ -1,4 +1,4 @@
-import ChatMessagesList from "@/components/chat-messages-list";
+import ChatMessagesList from "@/app/chats/[id]/comps/chat-messages-list";
 import getSession from "@/lib/session";
 import { notFound } from "next/navigation";
 import {getMessages, getRoom, getUserInfo, markMessageAsRead} from "./actions";
