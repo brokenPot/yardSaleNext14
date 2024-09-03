@@ -75,13 +75,13 @@ export default async function ProductDetail({
             </div>
             <div className="relative aspect-square">
                 <Image
-                    className="object-cover"
+                    className={`object-cover ${product.isSold ? "opacity-20" : ""}`}
                     fill
                     src={product.image}
                     alt={product.title}
-                    sizes="40vw"
                     priority
                 />
+                {product.isSold ? <div className="absolute  top-72 left-72 font-bold text-xl ">판매 완료</div> : null}
             </div>
             <div className="p-5 flex items-center gap-3 border-b border-neutral-700 ">
                 <Link className="cursor-pointer" href={ isOwner ? '/profile' : `/profile/${product.user.id}`}>
@@ -91,7 +91,7 @@ export default async function ProductDetail({
                                 src={product.user.avatar}
                                 width={40}
                                 height={40}
-                                style={{ width: 40, height: 40  }}
+                                style={{ width: 40, height: 40}}
                                 alt={product.user.name}
                             />
                         ) : (

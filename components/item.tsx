@@ -13,9 +13,10 @@ interface ItemProps {
     image:string;
     price: number;
     isOwner:boolean;
+    isSold:boolean
 }
 
-export default  function Item({id,title,image,price,isOwner}: ItemProps) {
+export default  function Item({id,title,image,price,isOwner,isSold}: ItemProps) {
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -37,21 +38,25 @@ export default  function Item({id,title,image,price,isOwner}: ItemProps) {
         window.location.href = "/home";
     };
 
-
+ // isSold
     return (
         <div
             onMouseLeave={handleMouseLeave}
             className="flex px-4 h-38 cursor-pointer justify-between  mb-2" >
                 <Link href={`/products/${id}`}>
                     <div className="flex space-x-4">
-                        <Image
-                            src={image}
-                            width={50}
-                            height={50}
-                            style={{ width: 50, height: 50 }}
-                            alt={title}
-                            priority
-                        />
+                        <div className="relative   overflow-hidden">
+                            <Image
+                                className={`object-cover ${isSold ? "opacity-20" : ""}`}
+                                src={image}
+                                width={50}
+                                height={50}
+                                style={{width: 50, height: 50}}
+                                alt={title}
+                                priority
+                            />
+                            {isSold ? <div className="absolute  top-1/4 left-1/4 font-bold text-xs text-white ">판매 완료</div> : null}
+                        </div>
                         <div className="pt-2 flex flex-col">
                             <h3 className="text-sm font-medium text-white">{title}</h3>
                             <span className="font-medium mt-1 text-white">${price}</span>

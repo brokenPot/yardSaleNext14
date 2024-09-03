@@ -2,7 +2,6 @@
 
 import ListProduct from "@/components/list-product";
 import { useState } from "react";
-import { getMoreProducts } from "@/app/(tabs)/home/actions";
 import { InitialProducts } from "@/app/(tabs)/home/page";
 
 interface ProductListProps {

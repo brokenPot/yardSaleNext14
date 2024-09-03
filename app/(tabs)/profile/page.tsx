@@ -131,7 +131,7 @@ export default async function Profile() {
                 </Link>
             </div>
             <div className="pt-5">
-                <span className="font-bold text-white">판매 중</span>
+                <span className="font-bold text-white">내 상품</span>
                 <hr className="h-px my-2 bg-gray-700 border-0"/>
             </div>
             {user?.products?.length! > 0 ?
@@ -143,6 +143,7 @@ export default async function Profile() {
                             image={product.image}
                             price={product.price}
                             isOwner={isOwner}
+                            isSold={product.isSold}
                         />
                 )))
                 : <div>판매하는 상품이 없습니다</div>}

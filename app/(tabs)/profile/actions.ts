@@ -29,8 +29,12 @@ export async function getUser() {
                         price:true,
                         title:true,
                         image:true,
-                        userId:true
-                    }
+                        userId:true,
+                        isSold:true,
+                    },
+                    orderBy: {
+                        createdAt: "desc",
+                    },
                 }
             }
         });
