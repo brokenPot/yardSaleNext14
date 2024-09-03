@@ -15,12 +15,12 @@ export interface KakaoKeywordMapProps {
 
 function KakaoKeywordMap({roadAddress, placeName ,latitude   ,longitude  }:KakaoKeywordMapProps) {
     const [map, setMap] = useState<any>();
-    const [marker, setMarker] = useState<any>();
+    // const [marker, setMarker] = useState<any>();
     const [markers, setMarkers] = useState<any[]>([]);
     const [places, setPlaces] = useState<any[]>([]);
     const [scriptLoad, setScriptLoad] = useState<boolean>(false);
-    const [searchInput, setSearchInput] = useState(placeName || '');
-    const [keyword, setKeyword] = useState('');
+    const [searchInput, setSearchInput] = useState(roadAddress || '');
+    const [keyword, setKeyword] = useState(roadAddress || '');
     // const [selectedPlace, setSelectedPlace] = useState();
     const [lat, ] = useState<number | null>(latitude !== null ? parseFloat(latitude) : null )
     const [lng, ] = useState<number | null>( longitude !== null ? parseFloat(longitude) : null )
@@ -69,11 +69,11 @@ function KakaoKeywordMap({roadAddress, placeName ,latitude   ,longitude  }:Kakao
                     };
                     const newMap = new kakao.maps.Map(container, options);
                     setMap(newMap);
-                    const newMarker = new kakao.maps.Marker({
-                        position: new kakao.maps.LatLng(lat  ? lat : latitude+0.01, lng ? lng : longitude-0.006),
-                        map: newMap,
-                    });
-                    setMarker(newMarker);
+                    // const newMarker = new kakao.maps.Marker({
+                    //     position: new kakao.maps.LatLng(lat  ? lat : latitude+0.01, lng ? lng : longitude-0.006),
+                    //     map: newMap,
+                    // });
+                    // setMarker(newMarker);
                 }
             });
         };
@@ -174,7 +174,7 @@ function KakaoKeywordMap({roadAddress, placeName ,latitude   ,longitude  }:Kakao
                     >
                         {markers.map((marker, i) => (
                             <EventMarkerContainer
-                                key={`EventMarkerContainer-${marker.position.lat}-${marker.position.lng}`}
+                                key={`EventMarkerContainer-${marker.position.lat}-${marker.position.lng}-${i}`}
                                 position={marker.position}
                                 content={marker.content}
                                 i={i}
