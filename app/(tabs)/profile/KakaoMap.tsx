@@ -72,7 +72,7 @@ const KakaoMap = ({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMapProps) 
     }
 
     const saveSelectedPosition = async () => {
-         const roadAddress = await setUserAddress({roadAddress : selectedRoadAddress,latitude: lat,longitude: lng});
+         const roadAddress = await setUserAddress({roadAddress : selectedRoadAddress,placeName:"",latitude: lat,longitude: lng});
          window.alert(roadAddress + "주소 업데이트")
     }
 

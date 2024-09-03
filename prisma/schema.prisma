@@ -18,6 +18,7 @@ model User {
   github_id   String?       @unique
   name        String        @unique
   avatar      String?
+  placeName   String?
   roadAddress String?
   lat         String?
   lng         String?

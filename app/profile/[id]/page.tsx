@@ -45,6 +45,7 @@ async function  Page({
                         image={product.image}
                         price={product.price}
                         isOwner={isOwner}
+                        isSold={product.isSold}
                     />
                 )))
                 : <div>판매하는 상품이 없습니다</div>}

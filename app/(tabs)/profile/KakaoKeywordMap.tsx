@@ -8,17 +8,18 @@ declare let kakao: any;
 
 export interface KakaoKeywordMapProps {
     roadAddress :string | null ,
+    placeName:string | null ,
     latitude  : string | null  ,
     longitude: string | null
 }
 
-function KakaoKeywordMap({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMapProps) {
+function KakaoKeywordMap({roadAddress, placeName ,latitude   ,longitude  }:KakaoKeywordMapProps) {
     const [map, setMap] = useState<any>();
-    // const [marker, setMarker] = useState<any>();
+    const [marker, setMarker] = useState<any>();
     const [markers, setMarkers] = useState<any[]>([]);
     const [places, setPlaces] = useState<any[]>([]);
     const [scriptLoad, setScriptLoad] = useState<boolean>(false);
-    const [searchInput, setSearchInput] = useState('');
+    const [searchInput, setSearchInput] = useState(placeName || '');
     const [keyword, setKeyword] = useState('');
     // const [selectedPlace, setSelectedPlace] = useState();
     const [lat, ] = useState<number | null>(latitude !== null ? parseFloat(latitude) : null )
@@ -68,11 +69,11 @@ function KakaoKeywordMap({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMap
                     };
                     const newMap = new kakao.maps.Map(container, options);
                     setMap(newMap);
-                    // const newMarker = new kakao.maps.Marker({
-                    //     position: new kakao.maps.LatLng(lat  ? lat : latitude+0.01, lng ? lng : longitude-0.006),
-                    //     map: newMap,
-                    // });
-                    // setMarker(newMarker);
+                    const newMarker = new kakao.maps.Marker({
+                        position: new kakao.maps.LatLng(lat  ? lat : latitude+0.01, lng ? lng : longitude-0.006),
+                        map: newMap,
+                    });
+                    setMarker(newMarker);
                 }
             });
         };
@@ -145,16 +146,20 @@ function KakaoKeywordMap({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMap
             </MapMarker>
         );
     }
-    const saveSelectedPosition = async ({ roadAddress,latitude,longitude}:KakaoKeywordMapProps) => {
-        const result = await setUserAddress({roadAddress ,  latitude,longitude});
+    const saveSelectedPosition = async ({ roadAddress,placeName,latitude,longitude}:KakaoKeywordMapProps) => {
+        const result = await setUserAddress({roadAddress ,placeName,  latitude,longitude});
         window.alert(result + "주소 업데이트")
     }
 
-
     return (
         <div className="map_wrap">
-            <div className={"flex justify-end"}>
-                {roadAddress}
+            <div className={"flex justify-between"}>
+                <div className={''}>
+                    {placeName}
+                </div>
+                <div>
+                    {roadAddress}
+                </div>
             </div>
             {scriptLoad && (
                 <>
@@ -163,11 +168,7 @@ function KakaoKeywordMap({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMap
                             lat: lat!,
                             lng: lng!,
                         }}
-                        className="w-[100%] h-72"
-                        // style={{
-                        //     width: '100%',
-                        //     height: '500px',
-                        // }}
+                        className="w-[100%] h-[90%]"
                         level={3}
                         onCreate={setMap}
                     >
@@ -209,9 +210,9 @@ function KakaoKeywordMap({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMap
                                                 markers[i].position.lng
                                             )
                                         );
-                                        // setSelectedPlace(item);
                                         saveSelectedPosition({
                                             roadAddress: item.road_address_name,
+                                            placeName: item.place_name,
                                             latitude: item.y,
                                             longitude: item.x
                                         })
@@ -234,7 +235,6 @@ function KakaoKeywordMap({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMap
                             ))}
                         </ul>
                         <div id="pagination"></div>
-
                     </div>
                 </>
             )}

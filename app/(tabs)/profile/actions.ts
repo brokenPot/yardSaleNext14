@@ -20,6 +20,7 @@ export async function getUser() {
                 avatar:true,
                 phone:true,
                 email:true,
+                placeName:true,
                 roadAddress:true,
                 lat:true,
                 lng:true,
@@ -47,11 +48,12 @@ export async function getUser() {
 
 interface AddressData{
     roadAddress: string | null;
+    placeName: string | null;
     latitude: string | null;
     longitude: string | null;
 }
 
-export async function setUserAddress({roadAddress,latitude,longitude}:AddressData){
+export async function setUserAddress({roadAddress,placeName,latitude,longitude}:AddressData){
     const session = await getSession();
     if (session.id) {
         await db.user.update({
@@ -60,6 +62,7 @@ export async function setUserAddress({roadAddress,latitude,longitude}:AddressDat
             },
             data: {
                 roadAddress:roadAddress,
+                placeName:placeName,
                 lat:latitude ,
                 lng:longitude,
             },
