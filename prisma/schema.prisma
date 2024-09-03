@@ -72,6 +72,7 @@ model Product {
   userId       Int
   ChatRoom     ChatRoom[]
   productLikes productLike[]
+  isSold       Boolean       @default(false)
 
   @@index([userId])
 }

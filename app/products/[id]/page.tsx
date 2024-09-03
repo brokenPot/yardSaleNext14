@@ -14,6 +14,7 @@ import DeleteButton from "@/app/products/[id]/edit/comps/delete-button";
 import db from "@/lib/db";
 import ProductLikeButton from "@/components/product-like-button";
 import ShowLikeComp from "@/components/showLikeComp";
+import SoldButton from "@/app/products/[id]/edit/comps/sold-button";
 
 export default async function ProductDetail({
                                                 params
@@ -90,7 +91,7 @@ export default async function ProductDetail({
                                 src={product.user.avatar}
                                 width={40}
                                 height={40}
-                                style={{ width: 40, height: 40 }}
+                                style={{ width: 40, height: 40  }}
                                 alt={product.user.name}
                             />
                         ) : (
@@ -131,7 +132,8 @@ export default async function ProductDetail({
                     >
                         Edit
                     </Link>)}
-                    <DeleteButton id={id} isOwner={isOwner}/>
+                    <SoldButton  id={id} isOwner={isOwner} isSold={product.isSold}/>
+                    <DeleteButton id={id} isOwner={isOwner} />
                     {!isOwner && (<form action={createChatRoom}>
                         <button className="bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold">
                             채팅하기

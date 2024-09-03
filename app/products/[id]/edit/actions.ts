@@ -62,3 +62,18 @@ export async function onDelete (id: number, isOwner: boolean) {
     revalidateTag("product-detail");
     return product
 };
+
+export async function onSold (id: number, isOwner: boolean, isSold: boolean) {
+    if (!isOwner) return;
+    const product = await db.product.update({
+        where: {
+            id,
+        },
+        data: {
+            isSold:!isSold,
+        },
+    });
+    revalidatePath("/home");
+    revalidateTag("product-detail");
+    return product
+};
