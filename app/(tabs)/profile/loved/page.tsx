@@ -1,14 +1,23 @@
 import React from 'react';
+import {getLikeProducts} from "@/app/(tabs)/profile/loved/actions";
+import {Prisma} from "@prisma/client";
+import LikedProductList from "@/app/(tabs)/profile/comps/LikedProductList";
 
-async function  Page({
+export type likeProducts = Prisma.PromiseReturnType<
+    typeof getLikeProducts
+>;
+
+export default async function Page({
                          params,
                      }: {
     params: { id: number };
 }) {
+
+    const likeProducts : likeProducts | undefined =  await getLikeProducts()
     return (
-        <div className="py-10 px-4">
-            loved
-        </div>);
+        <div>
+            <LikedProductList initialProducts={likeProducts}/>
+        </div>
+    );
 }
 
-export default Page;

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {formatToTimeAgo, formatToWon} from "@/lib/utils";
 
-interface ListProductProps {
+export interface ListProductProps {
     title: string;
     price: number;
     createdAt: Date;
@@ -19,6 +19,10 @@ export default function ListProduct({
                                         image,
                                         id,
                                     }: ListProductProps) {
+    // console.log(id)
+    // console.log(title)
+    // console.log(price)
+    // console.log(image)
     return (
         <Link href={`/products/${id}`} className="flex gap-5">
             <div className="relative size-28 rounded-md overflow-hidden">
