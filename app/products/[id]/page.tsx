@@ -87,7 +87,7 @@ export default async function ProductDetail({
                     alt={product.title}
                     priority
                 />
-                {product.isSold ? <div className="absolute  top-72 left-72 font-bold text-xl ">판매 완료</div> : null}
+                {product.isSold ? <div className="absolute top-36 left-36 md:top-72 md:left-72 font-bold text-xl ">판매 완료</div> : null}
             </div>
             <div className="px-1 py-5 flex items-center gap-3 border-b border-neutral-700 justify-between">
                 <div className={"flex items-center"}>
@@ -117,13 +117,13 @@ export default async function ProductDetail({
                     {/*    size="24" color="#3b82f6" className="flex items-center space-y-10"/>*/}
                     {isOwner && (
                         <form action={revalidateProductTitle}>
-                            <button className="bg-red-500 px-2  py-2.5 rounded-md text-white font-semibold text-xs  md:w-18 lg:w-32">
+                            <button className="bg-red-500 px-2  py-2.5 rounded-md text-white font-semibold text-xs w-18">
                                 Revalidate
                             </button>
                         </form>
                     ) }
                     {isOwner && (<Link
-                        className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold text-[10px] md:w-12 lg:w-20"
+                        className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-extrabold text-[10px] w-20 md:w-30"
                         href={`/products/${product.id}/edit`}
                     >
                         수정하기

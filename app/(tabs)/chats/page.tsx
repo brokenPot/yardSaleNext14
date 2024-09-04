@@ -36,18 +36,6 @@ export default async function Chat() {
                                 </div>
                                 <div className=" flex flex-col gap-1">
                                     <div className="flex gap-3 py-1 pl-1 ">
-                                        {room.users[1]?.avatar ? (
-                                            <Image
-                                                src={`${room.users[1].avatar}`}
-                                                alt={room.users[1].name}
-                                                width={50}
-                                                height={50}
-                                                style={{ width: 50, height: 50 }}
-                                                priority
-                                            />
-                                        ) : (
-                                            <div className="size-8 rounded-full bg-slate-400"></div>
-                                        )}
                                         <span className="text-xl text-white">
                                             {room.users[1].name}
                                         </span>
