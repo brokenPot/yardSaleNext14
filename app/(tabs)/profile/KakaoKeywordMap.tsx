@@ -14,6 +14,7 @@ export interface KakaoKeywordMapProps {
 }
 
 function KakaoKeywordMap({roadAddress, placeName ,latitude   ,longitude  }:KakaoKeywordMapProps) {
+    const [searchBar, setSearchbar] = useState<boolean>(true);
     const [map, setMap] = useState<any>();
     // const [marker, setMarker] = useState<any>();
     const [markers, setMarkers] = useState<any[]>([]);
@@ -168,7 +169,7 @@ function KakaoKeywordMap({roadAddress, placeName ,latitude   ,longitude  }:Kakao
                             lat: lat!,
                             lng: lng!,
                         }}
-                        className="w-[100%] h-[90%]"
+                        className="w-[100%] h-[60%] md:h-[90%]"
                         level={3}
                         onCreate={setMap}
                     >
@@ -181,7 +182,7 @@ function KakaoKeywordMap({roadAddress, placeName ,latitude   ,longitude  }:Kakao
                             />
                         ))}
                     </Map>
-                    <div id="menu_wrap" className="bg_white">
+                    {searchBar && (<div id="menu_wrap" className="bg-[#fff]">
                         <div className="option">
                             <div>
                                 <form onSubmit={handleSearchSubmit}>
@@ -235,9 +236,18 @@ function KakaoKeywordMap({roadAddress, placeName ,latitude   ,longitude  }:Kakao
                             ))}
                         </ul>
                         <div id="pagination"></div>
-                    </div>
+                    </div>)}
                 </>
             )}
+            <div className={"flex justify-end"}>
+                <button
+                    className="w-3/12 h-8 bg-blue-500 hover:bg-blue-600 px-5 py-2.5 rounded-md text-white font-semibold"
+                    onClick={() => {
+                        setSearchbar(prevState => !prevState)
+                    }}
+                >{searchBar ? "검색창 닫기" :"검색창 열기"}
+                </button>
+            </div>
         </div>
     );
 }

@@ -27,9 +27,9 @@ export default async function Products() {
             <ProductList initialProducts={initialProducts}/>
             <Link
                 href="/product/add"
-                className="bg-blue-500 flex items-center justify-center rounded-full size-16 fixed bottom-24 right-8 text-white transition-colors hover:bg-orange-400"
+                className="bg-blue-500 flex items-center justify-center rounded-full size-10 md:size-16 fixed bottom-24 right-8 text-white transition-colors hover:bg-orange-400"
             >
-                <PlusIcon className="size-10"/>
+                <PlusIcon className="size-7 md:size-10"/>
             </Link>
         </div>
     );

@@ -60,7 +60,7 @@ export default function TabBar() {
                 ) : (
                     <OutlineUserIcon className="w-7 h-7"/>
                 )}
-                <span>나의 당근</span>
+                <span>프로필</span>
             </Link>
         </div>
     );

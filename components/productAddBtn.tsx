@@ -15,17 +15,18 @@ export default function  ProductAddBtn  ({
                 }: ButtonProps)  {
     const { pending } = useFormStatus();
     // 돌아가기 나중에
+    // md:text-md
     return isLoading ?? pending ? (
         <ArrowPathIcon className="size-10 animate-spin mx-auto dark:text-gray-100" />
     ) : (
         <button
             type={type}
-            className={`px-6 ${fullWidth ? 'w-full flex justify-center items-center' : 'w-fit'} mx-auto h-10 disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed font-semibold active:scale-90 ${method === 'delete' ? 'delete-btn' : 'primary-btn'} `}
+            className={`px-6 text-[13px] md:text-[15px] ${fullWidth ? 'w-full flex justify-center items-center' : 'w-fit'} mx-auto h-10 disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed font-semibold active:scale-90 ${method === 'delete' ? 'delete-btn' : 'primary-btn'} `}
             disabled={isLoading ?? pending}
             onClick={onClick}
         >
             {href ? (
-                    <div className="flex items-center justify-between gap-2" >
+                    <div className="flex items-center justify-between gap-2  ]" >
                         {icon && icon}
                         {text}
                     </div>
