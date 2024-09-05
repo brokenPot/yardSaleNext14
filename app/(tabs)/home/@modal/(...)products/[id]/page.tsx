@@ -13,8 +13,7 @@ export default async function Modal({ params }: { params: { id: string } }) {
         return notFound();
     }
     return (
-        <div
-            className="absolute top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-60">
+        <div className="absolute top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-60">
             <ModalBtn/>
             <div className="flex-col justify-center w-5/12  max-w-screen-sm h-5/12">
                 <div

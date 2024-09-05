@@ -145,8 +145,8 @@ export default async function ProductDetail({
           {formatToWon(product.price)}원
         </span>
                 <section className="flex gap-2 items-center">
-                    <SoldButton  id={id} isOwner={isOwner} isSold={product.isSold}/>
-                    <DeleteButton id={id} isOwner={isOwner} />
+                    {isOwner && (<SoldButton  id={id} isOwner={isOwner} isSold={product.isSold}/>)}
+                    {isOwner && (<DeleteButton id={id} isOwner={isOwner} />)}
                     {!isOwner && (<form action={createChatRoom}>
                         <button className="bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold">
                             채팅하기
