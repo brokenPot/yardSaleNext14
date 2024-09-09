@@ -10,7 +10,6 @@ export default function ProductImage({ imageUrl, isSoldOut }:ProductImageTypes) 
 
     return (
         <div style={{ position: 'relative', display: 'inline-block' }}>
-            {/* 이미지 */}
             <Image
                 src={imageUrl}
                 width={40}
@@ -20,10 +19,9 @@ export default function ProductImage({ imageUrl, isSoldOut }:ProductImageTypes) 
                     display: 'block',
                     width: 40,
                     height: 40,
-                    filter: isSoldOut ? 'brightness(50%)' : 'none', // isSoldOut이 true이면 이미지를 어둡게 함
+                    filter: isSoldOut ? 'brightness(50%)' : 'none',
                 }}
             />
-            {/* "판매완료" 텍스트 */}
             {isSoldOut && (
                 <div
                     style={{

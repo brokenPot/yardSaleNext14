@@ -61,7 +61,7 @@ export async function onDelete (id: number, isOwner: boolean) {
     revalidatePath("/home");
     revalidateTag("product-detail");
     return product
-};
+}
 
 export async function onSold (id: number, isOwner: boolean, isSold: boolean) {
     if (!isOwner) return;
@@ -76,4 +76,4 @@ export async function onSold (id: number, isOwner: boolean, isSold: boolean) {
     revalidatePath("/home");
     revalidateTag("product-detail");
     return product
-};
+}

@@ -1,35 +1,69 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { Map, MapMarker, useMap } from 'react-kakao-maps-sdk';
+import React, {useState, useEffect} from 'react';
+import {Map, MapMarker, useMap} from 'react-kakao-maps-sdk';
 import './kakaomap.css';
 import {setUserAddress} from "@/app/(tabs)/profile/actions";
+
 declare let kakao: any;
 
 export interface KakaoKeywordMapProps {
-    roadAddress :string | null ,
-    placeName:string | null ,
-    latitude  : string | null  ,
+    roadAddress: string | null,
+    placeName: string | null,
+    latitude: string | null,
     longitude: string | null
 }
 
-function KakaoKeywordMap({roadAddress, placeName ,latitude   ,longitude  }:KakaoKeywordMapProps) {
+interface markerProps {
+    content: string
+    position: {
+        lat: number,
+        lng: number
+    }
+}
+
+interface mapDataProps {
+    address_name: string,
+    category_group_code: string,
+    category_group_name: string,
+    category_name: string,
+    distance: string,
+    id: string,
+    phone: string,
+    place_name: string,
+    place_url: string,
+    road_address_name: string,
+    x: string,
+    y: string
+}
+
+interface eventMarkerContainerProps {
+    position: {
+        lat: number,
+        lng: number
+    },
+    content: string,
+    i: number
+}
+
+function KakaoKeywordMap({roadAddress, placeName, latitude, longitude}: KakaoKeywordMapProps) {
     const [searchBar, setSearchbar] = useState<boolean>(true);
     const [map, setMap] = useState<any>();
     // const [marker, setMarker] = useState<any>();
-    const [markers, setMarkers] = useState<any[]>([]);
-    const [places, setPlaces] = useState<any[]>([]);
+    const [markers, setMarkers] = useState<markerProps[]>([]);
+    const [places, setPlaces] = useState<mapDataProps[]>([]);
     const [scriptLoad, setScriptLoad] = useState<boolean>(false);
     const [searchInput, setSearchInput] = useState(roadAddress || '');
     const [keyword, setKeyword] = useState(roadAddress || '');
     // const [selectedPlace, setSelectedPlace] = useState();
-    const [lat, ] = useState<number | null>(latitude !== null ? parseFloat(latitude) : null )
-    const [lng, ] = useState<number | null>( longitude !== null ? parseFloat(longitude) : null )
+    const [lat,] = useState<number | null>(latitude !== null ? parseFloat(latitude) : null)
+    const [lng,] = useState<number | null>(longitude !== null ? parseFloat(longitude) : null)
 
     const markerImageSrc =
         'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png';
     const imageSize = {width: 36, height: 37};
     const spriteSize = {width: 36, height: 691};
+
 
     const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchInput(e.target.value);
@@ -53,19 +87,19 @@ function KakaoKeywordMap({roadAddress, placeName ,latitude   ,longitude  }:Kakao
         };
         const initKakaoMap = () => {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(setupMap, handleError,{
+                navigator.geolocation.getCurrentPosition(setupMap, handleError, {
                     enableHighAccuracy: true,
                     maximumAge: 30000,
                     timeout: 27000,
                 });
             }
         };
-        const setupMap = ({ coords: { latitude, longitude }}: GeolocationPosition) => {
+        const setupMap = ({coords: {latitude, longitude}}: GeolocationPosition) => {
             new kakao.maps.load(() => {
                 const container = document.getElementById('map');
                 if (container) {
                     const options = {
-                        center: new kakao.maps.LatLng(lat ? lat : latitude+0.01, lng ? lng : longitude-0.006),
+                        center: new kakao.maps.LatLng(lat ? lat : latitude + 0.01, lng ? lng : longitude - 0.006),
                         level: 3,
                     };
                     const newMap = new kakao.maps.Map(container, options);
@@ -85,42 +119,34 @@ function KakaoKeywordMap({roadAddress, placeName ,latitude   ,longitude  }:Kakao
     }, [lng, lat]);
 
     useEffect(() => {
-        if (!map) return;
+        if (!map || !keyword) return;
+
         const ps = new kakao.maps.services.Places();
-        if(keyword!==''){
-            ps.keywordSearch(keyword, (data:any, status:any, _pagination:any) => {
-                if (status === kakao.maps.services.Status.OK) {
-                    setPlaces(data);
 
-                    /* 이하는 function displayPlaces(places) 함수와 비슷한 내용 */
-                    // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-                    // LatLngBounds 객체에 좌표를 추가합니다
-                    const bounds = new kakao.maps.LatLngBounds();
-                    let markers = [];
+        const handleSearchResult = (data: mapDataProps[], status: string) => {
+            if (status !== kakao.maps.services.Status.OK) return;
 
-                    for (var i = 0; i < data.length; i++) {
-                        // @ts-ignore
-                        markers.push({
-                            position: {
-                                lat: data[i].y,
-                                lng: data[i].x,
-                            },
-                            content: data[i].place_name,
-                        });
-                        // @ts-ignore
-                        bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
-                    }
-                    setMarkers(markers);
+            setPlaces(data);
+            updateMarkersAndBounds(data);
+        };
 
-                    // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-                    map.setBounds(bounds);
-                }
+        const updateMarkersAndBounds = (data: mapDataProps[]) => {
+            const bounds = new kakao.maps.LatLngBounds();
+            const markers = data.map((place) => {
+                bounds.extend(new kakao.maps.LatLng(place.y, place.x));
+                return {
+                    position: { lat: Number(place.y), lng: Number(place.x) },
+                    content: place.place_name,
+                };
             });
+            setMarkers(markers);
+            map.setBounds(bounds);
+        };
 
-        }
-
+        ps.keywordSearch(keyword, handleSearchResult);
     }, [map, keyword]);
-    const EventMarkerContainer = ({ position, content, i }: any) => {
+
+    const EventMarkerContainer = ({position, content, i}: eventMarkerContainerProps) => {
         const map = useMap();
         const [isVisible, setIsVisible] = useState(false);
 
@@ -138,7 +164,6 @@ function KakaoKeywordMap({roadAddress, placeName ,latitude   ,longitude  }:Kakao
                 }}
                 onClick={(marker) => {
                     map.panTo(marker.getPosition());
-                    // setSelectedPlace(places[i]);
                 }}
                 onMouseOver={() => setIsVisible(true)}
                 onMouseOut={() => setIsVisible(false)}
@@ -147,8 +172,8 @@ function KakaoKeywordMap({roadAddress, placeName ,latitude   ,longitude  }:Kakao
             </MapMarker>
         );
     }
-    const saveSelectedPosition = async ({ roadAddress,placeName,latitude,longitude}:KakaoKeywordMapProps) => {
-        const result = await setUserAddress({roadAddress ,placeName,  latitude,longitude});
+    const saveSelectedPosition = async ({roadAddress, placeName, latitude, longitude}: KakaoKeywordMapProps) => {
+        const result = await setUserAddress({roadAddress, placeName, latitude, longitude});
         window.alert(result + "주소 업데이트")
     }
 
@@ -245,7 +270,7 @@ function KakaoKeywordMap({roadAddress, placeName ,latitude   ,longitude  }:Kakao
                     onClick={() => {
                         setSearchbar(prevState => !prevState)
                     }}
-                >{searchBar ? "검색창 닫기" :"검색창 열기"}
+                >{searchBar ? "검색창 닫기" : "검색창 열기"}
                 </button>
             </div>
         </div>

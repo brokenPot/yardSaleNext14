@@ -51,7 +51,7 @@ export default function AddProduct() {
         }
         const formData = new FormData();
         formData.append("title", data.title);
-        formData.append("price", data.price as any );
+        formData.append("price", data.price as any);
         formData.append("description", data.description);
         formData.append("photo", data.photo);
         return uploadProduct(formData);

@@ -90,6 +90,8 @@ const KakaoMap = ({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMapProps) 
     }
 
     function placesSearchCB(data:any, status:any) {
+        console.log(data)
+        console.log(status)
         if (status === kakao.maps.services.Status.OK) {
             const bounds = new kakao.maps.LatLngBounds(); // 지도 범위를 재설정하기 위해 LatLngBounds 객체에 좌표를 추가합니다
             data.forEach((place:any) => {
