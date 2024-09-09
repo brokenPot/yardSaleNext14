@@ -55,7 +55,7 @@ function KakaoKeywordMap({roadAddress, placeName, latitude, longitude}: KakaoKey
     const [scriptLoad, setScriptLoad] = useState<boolean>(false);
     const [searchInput, setSearchInput] = useState(roadAddress || '');
     const [keyword, setKeyword] = useState(roadAddress || '');
-    // const [selectedPlace, setSelectedPlace] = useState();
+    const [selectedPlace, setSelectedPlace] = useState<KakaoKeywordMapProps|null>(null);
     const [lat,] = useState<number | null>(latitude !== null ? parseFloat(latitude) : null)
     const [lng,] = useState<number | null>(longitude !== null ? parseFloat(longitude) : null)
 
@@ -173,9 +173,12 @@ function KakaoKeywordMap({roadAddress, placeName, latitude, longitude}: KakaoKey
         );
     }
     const saveSelectedPosition = async ({roadAddress, placeName, latitude, longitude}: KakaoKeywordMapProps) => {
-        const result = await setUserAddress({roadAddress, placeName, latitude, longitude});
-        window.alert(result + "주소 업데이트")
+        const selectedLatLng = new kakao.maps.LatLng(Number(latitude), Number(longitude));
+        map.panTo(selectedLatLng);  // 선택된 위치로 이동
+        map.setLevel(2);
+        setSelectedPlace({roadAddress, placeName, latitude, longitude})
     }
+
 
     return (
         <div className="map_wrap">
@@ -264,7 +267,18 @@ function KakaoKeywordMap({roadAddress, placeName, latitude, longitude}: KakaoKey
                     </div>)}
                 </>
             )}
-            <div className={"flex justify-end"}>
+            <div className={"flex justify-between"}>
+                <button
+                    className="w-3/12 h-8 bg-blue-500 disabled:bg-gray-400 hover:bg-blue-600 px-5 py-2.5 rounded-md text-white font-semibold"
+                    onClick={ async () => {
+                        if(selectedPlace!==null){
+                            const result = await setUserAddress(selectedPlace);
+                            window.alert(result + "주소 업데이트")
+                        }
+                    }}
+                    disabled={selectedPlace === null}
+                >{ "주소 저장"}
+                </button>
                 <button
                     className="w-3/12 h-8 bg-blue-500 hover:bg-blue-600 px-5 py-2.5 rounded-md text-white font-semibold"
                     onClick={() => {
