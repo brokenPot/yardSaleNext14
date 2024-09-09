@@ -25,9 +25,10 @@ async function  MiniProfile({user}:{user:userType}) {
                 <div className="flex items-center mt-4 space-x-3">
                     {user?.avatar ?
                         (<Image
+                            className="rounded-md"
                             width={100}
                             height={100}
-                            style={{ width: 100, height: 100 }}
+                            style={{ width: 100, height: 100}}
                             src={user.avatar}
                             alt={user.name}
                             priority

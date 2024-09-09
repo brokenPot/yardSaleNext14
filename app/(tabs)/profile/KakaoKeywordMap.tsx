@@ -277,10 +277,10 @@ function KakaoKeywordMap({roadAddress, placeName, latitude, longitude}: KakaoKey
                         }
                     }}
                     disabled={selectedPlace === null}
-                >{ "주소 저장"}
+                >{"주소 저장"}
                 </button>
                 <button
-                    className="w-3/12 h-8 bg-blue-500 hover:bg-blue-600 px-5 py-2.5 rounded-md text-white font-semibold"
+                    className="w-3/12 h-8 bg-blue-500 hover:bg-blue-600 px-2 py-2.5 rounded-md text-white font-semibold text-xs md:text-md"
                     onClick={() => {
                         setSearchbar(prevState => !prevState)
                     }}

@@ -30,7 +30,7 @@ export default  function  EditProfileComp ({avatar, name,phone,email}:UserDataTy
 
     return (
         <div >
-            <form action={dispatch} className="py-10 px-4 space-y-4">
+            <form action={dispatch} className="py-3 px-1 space-y-4">
                 <div className="flex items-center space-x-3">
                     {preview ?
                         (<Image
