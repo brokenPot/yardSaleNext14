@@ -7,7 +7,7 @@ import {uploadPost} from "@/app/life/add/actions";
 import {ProductType} from "@/app/products/[id]/edit/schema";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {postSchema} from "@/app/life/add/schema";
+import {postSchema,PostType} from "@/app/life/add/schema";
 
 export default function AddPost() {
     const router = useRouter();
@@ -15,11 +15,11 @@ export default function AddPost() {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<ProductType>({
+    } = useForm<PostType>({
         resolver: zodResolver(postSchema),
     });
 
-    const onSubmitData = handleSubmit(async (data: ProductType) => {
+    const onSubmitData = handleSubmit(async (data: PostType) => {
         const formData = new FormData();
         formData.append("title", data.title);
         formData.append("description", data.description);
