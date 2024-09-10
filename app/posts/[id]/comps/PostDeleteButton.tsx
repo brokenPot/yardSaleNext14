@@ -18,7 +18,7 @@ const PostDeleteButton = ({ id, isOwner }: { id: number; isOwner: boolean }) => 
         <button
             onClick={onClick}
             type="button"
-            className="bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold"
+            className="flex justify-center items-center w-3/12 h-8 bg-red-500   rounded-md text-white font-semibold  text-xs md:text-md"
         >
             {isLoading ? "삭제하는 중.." : "삭제하기"}
         </button>
