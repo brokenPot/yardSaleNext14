@@ -1,15 +1,18 @@
 "use client";
 
-import { EllipsisVerticalIcon } from "@heroicons/react/24/solid";
+import {EllipsisVerticalIcon, HandThumbUpIcon} from "@heroicons/react/24/solid";
 import {
     HandThumbUpIcon as OutlineHandThumbUpIcon,
-    HandThumbDownIcon as OutlineHandThumbDownIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import avatar from '@/avatar.gif'
-import {useState} from "react";
+import {useOptimistic, useState, useTransition} from "react";
 import CommentControl from "@/components/comment-control";
 import {EditComment} from "@/components/edit-comment";
+import {
+    dislikeComment,
+    likeComment,
+} from "@/app/posts/[id]/actions";
 
 interface CommentProps {
     id: number;
@@ -22,9 +25,11 @@ interface CommentProps {
     };
     sessionId: number;
     createdAt: string;
+    isCommentLike : boolean;
+    commentLike : number;
 }
 
-export default function Comments({
+export default async function Comments({
                                      id,
                                      postId,
                                      payload,
@@ -32,9 +37,33 @@ export default function Comments({
                                      user,
                                      sessionId,
                                      createdAt,
+                                     isCommentLike,
+                                     commentLike,
                                  }: CommentProps) {
+    const [, startTransition] = useTransition();
+    const [state, reducerFn] = useOptimistic(
+        { isCommentLike, commentLike },
+        (previousState, ) => ({
+            isCommentLike: !previousState.isCommentLike,
+            commentLike: previousState.isCommentLike
+                ? previousState.commentLike - 1
+                : previousState.commentLike + 1,
+        })
+    );
+
     const [modal, setModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
+
+    const onClick = async () => {
+        startTransition( async ()=>{
+            reducerFn(undefined);
+            if (isCommentLike) {
+                await dislikeComment(id,postId);
+            } else {
+                await likeComment(id,postId);
+            }
+        })
+    };
 
     return (
         <div
@@ -67,10 +96,25 @@ export default function Comments({
             </div>
             <div className="flex items-center justify-between pl-4 mt-4">
                 <div className="text-base text-neutral-100">{payload}</div>
-                <div className="flex items-center gap-3 *:size-5 *:cursor-pointer">
-                    <OutlineHandThumbUpIcon />
-                    <OutlineHandThumbDownIcon />
-                </div>
+                <button
+                    onClick={onClick}
+                    className={`flex items-center gap-2 text-neutral-400 text-sm border border-neutral-400 rounded-full p-2  transition-colors ${
+                        state.isCommentLike
+                            ? "bg-orange-500 text-white border-orange-500"
+                            : "hover:bg-neutral-800"
+                    }`}
+                >
+                    {state.isCommentLike ? (
+                        <HandThumbUpIcon className="size-5"/>
+                    ) : (
+                        <OutlineHandThumbUpIcon className="size-5"/>
+                    )}
+                    {state.isCommentLike ? (
+                        <span> {state.commentLike}</span>
+                    ) : (
+                        <span>추천 ({state.commentLike})</span>
+                    )}
+                </button>
             </div>
         </div>
     );

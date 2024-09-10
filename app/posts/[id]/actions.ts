@@ -49,6 +49,35 @@ export async function createComment(payload: string, postId: number) {
   return newComment;
 }
 
+export async function likeComment(commentId: number,postId:number) {
+  const session = await getSession();
+  try {
+    await db.commentLike.create({
+      data: {
+        commentId,
+        userId: session.id!,
+      },
+    });
+      revalidateTag(`comments-${postId}`);
+  } catch (e) {}
+}
+
+export async function dislikeComment(commentId: number,postId:number) {
+  try {
+    const session = await getSession();
+    await db.commentLike.delete({
+      where: {
+        id: {
+          commentId,
+          userId: session.id!,
+        },
+      },
+    });
+      revalidateTag(`comments-${postId}`);
+  } catch (e) {}
+}
+
+
 export async function updateComment(payload: string, commentId: number) {
   const user = await getSession();
   if (!user.id) return;
@@ -71,6 +100,7 @@ export async function getComments(postId: number) {
       postId: postId,
     },
     include: {
+      commentLike:true,
       user: {
         select: { name: true, avatar: true },
       },

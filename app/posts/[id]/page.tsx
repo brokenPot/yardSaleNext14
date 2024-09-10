@@ -28,8 +28,8 @@ export default async function PostDetail({params,}: {
     const allComments = await getCachedComments(post.id);
     const me = await getMe();
     const session = await getSession();
-
     const isOwner = await getIsOwner(post.userId);
+
     return (
         <div className="p-5 text-white">
             <div

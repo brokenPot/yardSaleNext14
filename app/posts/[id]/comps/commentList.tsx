@@ -47,13 +47,13 @@ export function CommentList({ allComments,sessionId, postId, me }: ICommentListP
                     name: me.name,
                     avatar: me.avatar,
                 },
+                commentLike:[]
             });
             if (commentEndRef.current)
                 commentEndRef.current.scrollIntoView({ behavior: "smooth" });
             await createComment(payload, postId);
         })
     };
-
     return (
         <div className="w-full mx-auto">
       <span className="font-medium">
@@ -70,6 +70,8 @@ export function CommentList({ allComments,sessionId, postId, me }: ICommentListP
                         user={comment.user}
                         userId={comment.userId}
                         createdAt={formatToTimeAgo(comment.created_at.toString())}
+                        isCommentLike={comment.commentLike.length>0 && comment.commentLike.filter((cl:any)=>cl.userId=== sessionId).length>0 }
+                        commentLike={comment.commentLike.length}
                     />
                 ))}
             </Suspense>
