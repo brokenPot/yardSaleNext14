@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import EditPostForm from "@/app/posts/[id]/edit/EditPostForm";
+import EditPostForm from "@/app/posts/[id]/comps/EditPostForm";
 import {getPost} from "@/app/posts/[id]/actions";
 
 export default async function EditProduct({

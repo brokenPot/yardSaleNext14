@@ -87,7 +87,7 @@ export default function ChatMessagesList({
     }, []);
 
     return (
-        <div className="pl-5 flex flex-col gap-5 min-h-screen justify-end py-10">
+        <div className="pl-5 flex flex-col gap-5 min-h-screen justify-end py-14 p-2">
             {messages.map((message) => (
                 <div
                     key={message.id}
@@ -134,7 +134,7 @@ export default function ChatMessagesList({
                     </div>
                 </div>
             ))}
-            <form className="mx-auto fixed inset-x-0 bottom-0 max-w-md" onSubmit={onSubmit}>
+            <form className="px-2 mb-2 mx-auto fixed inset-x-0 bottom-0 max-w-md" onSubmit={onSubmit}>
                     <input
                         required
                         onChange={onChange}
@@ -144,7 +144,7 @@ export default function ChatMessagesList({
                         name="message"
                         placeholder="Write a message..."
                     />
-                    <button className="absolute right-0">
+                    <button className="absolute right-2">
                         <ArrowUpCircleIcon className="size-10 text-blue-500 transition-colors hover:text-blue-300"/>
                     </button>
                 </form>

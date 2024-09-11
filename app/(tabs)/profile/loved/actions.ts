@@ -18,6 +18,7 @@ export async function getLikeProducts() {
                         createdAt: true,
                         image: true,
                         id: true,
+                        isSold:true
                     }
                 }
             }

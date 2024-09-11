@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import {setUserAddress} from "@/app/(tabs)/profile/actions";
 import { Map } from "react-kakao-maps-sdk";
-import {KakaoKeywordMapProps} from "@/app/(tabs)/profile/KakaoKeywordMap";
+import {KakaoKeywordMapProps} from "@/app/(tabs)/profile/comps/KakaoKeywordMap";
 declare let kakao: any;
 
 const KakaoMap = ({roadAddress  ,latitude   ,longitude  }:KakaoKeywordMapProps) => {

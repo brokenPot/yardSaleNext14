@@ -1,7 +1,7 @@
 import EditProfileComp from "@/app/(tabs)/profile/edit/EditProfileComp";
 import {getUser} from "@/app/(tabs)/profile/actions";
 import React from "react";
-import KakaoKeywordMap from "@/app/(tabs)/profile/KakaoKeywordMap";
+import KakaoKeywordMap from "@/app/(tabs)/profile/comps/KakaoKeywordMap";
 
 
 export default async function  EditProfile ({
