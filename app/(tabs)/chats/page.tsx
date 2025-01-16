@@ -1,18 +1,16 @@
 import { formatToTimeAgo } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import {countUnreadMessages,  getAllChatRoomCache} from "./actions";
-import { revalidateTag } from "next/cache";
+import {countUnreadMessages, getAllChatRoom} from "./actions";
 import getSession from "@/lib/session";
 
 //모든 채팅방 가져오기
 
 export default async function Chat() {
     const session = await getSession();
-    const rooms = await getAllChatRoomCache();
+    const rooms = await getAllChatRoom();
     const unReadCount = await countUnreadMessages(session.id);
 
-    revalidateTag("chatRoom-all");
     return (
         <div className="py-12 px-4 flex flex-col h-screen justify-start items-center ">
             {rooms.map((room) => (

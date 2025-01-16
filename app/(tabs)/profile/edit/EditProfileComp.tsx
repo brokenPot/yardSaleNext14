@@ -3,7 +3,7 @@
 import Input from "@/components/input";
 import {editUser} from "@/app/(tabs)/profile/edit/actions";
 import Image from "next/image";
-import {useFormState} from "react-dom";
+import { useActionState } from "react";
 import FormButton from "@/components/form-btn";
 import {useState} from "react";
 
@@ -17,7 +17,7 @@ interface UserDataType {
 
 export default  function  EditProfileComp ({avatar, name,phone,email}:UserDataType)  {
     const [preview, setPreview] = useState(avatar);
-    const [state, dispatch] = useFormState(editUser, null);
+    const [state, dispatch] = useActionState(editUser, null);
 
     const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {
@@ -40,6 +40,7 @@ export default  function  EditProfileComp ({avatar, name,phone,email}:UserDataTy
                             src={preview}
                             alt={name}
                             priority
+                            unoptimized
                         />)
                         : (
                             <div className="w-14 h-14 rounded-full bg-slate-500"/>

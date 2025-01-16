@@ -49,7 +49,7 @@ interface eventMarkerContainerProps {
 function KakaoKeywordMap({roadAddress, placeName, latitude, longitude}: KakaoKeywordMapProps) {
     const [searchBar, setSearchbar] = useState<boolean>(true);
     const [map, setMap] = useState<any>();
-    // const [marker, setMarker] = useState<any>();
+    const [marker, setMarker] = useState<any>();
     const [markers, setMarkers] = useState<markerProps[]>([]);
     const [places, setPlaces] = useState<mapDataProps[]>([]);
     const [scriptLoad, setScriptLoad] = useState<boolean>(false);
@@ -104,11 +104,11 @@ function KakaoKeywordMap({roadAddress, placeName, latitude, longitude}: KakaoKey
                     };
                     const newMap = new kakao.maps.Map(container, options);
                     setMap(newMap);
-                    // const newMarker = new kakao.maps.Marker({
-                    //     position: new kakao.maps.LatLng(lat  ? lat : latitude+0.01, lng ? lng : longitude-0.006),
-                    //     map: newMap,
-                    // });
-                    // setMarker(newMarker);
+                    const newMarker = new kakao.maps.Marker({
+                        position: new kakao.maps.LatLng(lat  ? lat : latitude+0.01, lng ? lng : longitude-0.006),
+                        map: newMap,
+                    });
+                    setMarker(newMarker);
                 }
             });
         };

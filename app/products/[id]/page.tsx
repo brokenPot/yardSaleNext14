@@ -15,21 +15,17 @@ import db from "@/lib/db";
 import ProductLikeButton from "@/components/product-like-button";
 import ShowLikeComp from "@/components/showLikeComp";
 import SoldButton from "@/app/products/[id]/edit/comps/sold-button";
-import {CiMenuKebab} from "react-icons/ci";
+// import {CiMenuKebab} from "react-icons/ci";
 
 export default async function ProductDetail({
                                                 params
                                             }: {
     params: { id: string };
 }) {
-
     const id = Number(params.id);
     const { product, likeCount, isLiked, isOwner } = await fetchProductDetails(id);
     // const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const handleMouseEnter = () => {
-        // setIsMenuOpen(true);
-    };
     const createChatRoom = async () => {
         "use server";
         const session = await getSession();
