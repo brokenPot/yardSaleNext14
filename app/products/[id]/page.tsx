@@ -22,9 +22,10 @@ export default async function ProductDetail({
                                             }: {
     params: { id: string };
 }) {
-    const id = Number(params.id);
-    const { product, likeCount, isLiked, isOwner } = await fetchProductDetails(id);
-    // const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { id } = await params;
+    const numericId = Number(id);
+    // const id = Number(params.id);
+    const { product, likeCount, isLiked, isOwner } = await fetchProductDetails(numericId);
 
     const createChatRoom = async () => {
         "use server";
@@ -82,6 +83,7 @@ export default async function ProductDetail({
                     src={product.image}
                     alt={product.title}
                     priority
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
                 {product.isSold ? <div className="absolute top-36 left-36 md:top-72 md:left-72 font-bold text-xl ">판매 완료</div> : null}
             </div>
@@ -132,7 +134,7 @@ export default async function ProductDetail({
                     <p>{product.description}</p>
                 </div>
                 <div className="p-5">
-                    {isOwner ? <ShowLikeComp   likeCount={likeCount}  /> : <ProductLikeButton isLiked={isLiked} likeCount={likeCount} targetId={id}/>}
+                    {isOwner ? <ShowLikeComp   likeCount={likeCount}  /> : <ProductLikeButton isLiked={isLiked} likeCount={likeCount} targetId={numericId}/>}
                 </div>
             </div>
             <div
@@ -141,8 +143,8 @@ export default async function ProductDetail({
           {formatToWon(product.price)}원
         </span>
                 <section className="flex gap-2 items-center">
-                    {isOwner && (<SoldButton  id={id} isOwner={isOwner} isSold={product.isSold}/>)}
-                    {isOwner && (<DeleteButton id={id} isOwner={isOwner} />)}
+                    {isOwner && (<SoldButton  id={numericId} isOwner={isOwner} isSold={product.isSold}/>)}
+                    {isOwner && (<DeleteButton id={numericId} isOwner={isOwner} />)}
                     {!isOwner && (<form action={createChatRoom}>
                         <button className="bg-blue-500 px-5 py-2.5 rounded-md text-white font-semibold">
                             채팅하기

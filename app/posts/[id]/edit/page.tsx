@@ -7,17 +7,21 @@ export default async function EditProduct({
                                           }: {
     params: { id: string };
 }) {
-    const id = Number(params.id);
-    if (isNaN(id)) {
+    const { id } = await params;
+    const numericId = Number(id);
+
+    // const id = Number(params.id);
+
+    if (isNaN(numericId)) {
         return notFound();
     }
-    const post = await getPost(id);
+    const post = await getPost(numericId);
     if (post === null) {
         return notFound();
     }
     return (
         <EditPostForm
-            id={id}
+            id={numericId}
             title={post.title!}
             description={post.description!}
         />

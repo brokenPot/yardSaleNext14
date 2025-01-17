@@ -3,11 +3,15 @@ import {notFound} from "next/navigation";
 import Image from "next/image";
 import {getProduct} from "@/app/(tabs)/home/@modal/(...)products/[id]/actions";
 export default async function Modal({ params }: { params: { id: string } }) {
-    const id = +params.id;
-    if (isNaN(id)) {
+    // const id = +params.id;
+
+    const { id } = await params;
+    const numericId = Number(id);
+
+    if (isNaN(numericId)) {
         return notFound();
     }
-    const product = await getProduct(id);
+    const product = await getProduct(numericId);
 
     if (!product) {
         return notFound();

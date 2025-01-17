@@ -15,16 +15,19 @@ import ShowThumbsUpComp from "@/app/posts/[id]/comps/showThumbsUpComp";
 export default async function PostDetail({params,}: {
     params: { id: string };
 }) {
-    const id = Number(params.id);
-    if (isNaN(id)) {
+    // const id = Number(params.id);
+    const { id } = await params;
+    const numericId = Number(id);
+
+    if (isNaN(numericId)) {
         return notFound();
     }
-    const post = await getCachedPost(id);
+    const post = await getCachedPost(numericId);
     if (!post) {
         return notFound();
     }
 
-    const { likeCount, isLiked } = await getCachedLikeStatus(id);
+    const { likeCount, isLiked } = await getCachedLikeStatus(numericId);
     const allComments = await getCachedComments(post.id);
     const me = await getMe();
     const session = await getSession();
@@ -72,7 +75,7 @@ export default async function PostDetail({params,}: {
                     <span>조회 {post.views}</span>
                 </div>
 
-                {isOwner ? (<ShowThumbsUpComp likeCount={likeCount} />) : (<LikeButton isLiked={isLiked} likeCount={likeCount} targetId={id}/>)}
+                {isOwner ? (<ShowThumbsUpComp likeCount={likeCount} />) : (<LikeButton isLiked={isLiked} likeCount={likeCount} targetId={numericId}/>)}
 
                 <CommentList postId={post.id} sessionId={session.id!} allComments={allComments} me={me}/>
             </div>

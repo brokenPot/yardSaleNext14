@@ -12,18 +12,21 @@ export default async function EditProduct({
                                           }: {
     params: { id: string };
 }) {
-    const id = Number(params.id);
-    if (isNaN(id)) {
+    const { id } = await params;
+    const numericId = Number(id);
+
+    // const id = Number(params.id);
+    if (isNaN(numericId)) {
         return notFound();
     }
 
-    const product = await getCachedProduct(id);
+    const product = await getCachedProduct(numericId);
     if (product === null) {
         return notFound();
     }
     return (
         <EditProductForm
-            productId={id}
+            productId={numericId}
             image={product.image}
             title={product.title}
             price={product.price}
