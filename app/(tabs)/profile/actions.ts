@@ -67,7 +67,7 @@ export async function setUserAddress({roadAddress,placeName,latitude,longitude}:
                 lng:longitude,
             },
         });
-        return roadAddress
+        redirect(`/profile/edit`);
     }
 }
 

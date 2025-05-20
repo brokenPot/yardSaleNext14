@@ -54,6 +54,7 @@ export default  function Item({id,title,image,price,isOwner,isSold}: ItemProps) 
                                 style={{width: 50, height: 50}}
                                 alt={title}
                                 priority
+                                unoptimized
                             />
                             {isSold ? <div className="absolute  top-1/4 left-1/4 font-bold text-xs text-white ">판매 완료</div> : null}
                         </div>

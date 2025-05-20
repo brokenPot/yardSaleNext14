@@ -1,9 +1,10 @@
 "use client";
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useActionState} from 'react';
 import {Map, MapMarker, useMap} from 'react-kakao-maps-sdk';
 import './kakaomap.css';
 import {setUserAddress} from "@/app/(tabs)/profile/actions";
+import {editUser} from "@/app/(tabs)/profile/edit/actions";
 
 declare let kakao: any;
 
@@ -63,6 +64,7 @@ function KakaoKeywordMap({roadAddress, placeName, latitude, longitude}: KakaoKey
         'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png';
     const imageSize = {width: 36, height: 37};
     const spriteSize = {width: 36, height: 691};
+
 
 
     const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -179,8 +181,17 @@ function KakaoKeywordMap({roadAddress, placeName, latitude, longitude}: KakaoKey
         setSelectedPlace({roadAddress, placeName, latitude, longitude})
     }
 
+    const updateAddress = async () => {
+        if(selectedPlace!==null){
+            const result = await setUserAddress(selectedPlace);
+            window.alert(result + "주소 업데이트")
+
+        }
+    }
+
 
     return (
+        // 카카오 지도 컴포넌트
         <div className="map_wrap">
             <div className={"flex justify-between"}>
                 <div className={''}>
@@ -210,7 +221,7 @@ function KakaoKeywordMap({roadAddress, placeName, latitude, longitude}: KakaoKey
                             />
                         ))}
                     </Map>
-                    {searchBar && (<div id="menu_wrap" className="bg-[#fff]">
+                    {searchBar && (<div id="menu_wrap" className="bg-[#fff] h-[70%] ">
                         <div className="option">
                             <div>
                                 <form onSubmit={handleSearchSubmit}>
@@ -267,15 +278,10 @@ function KakaoKeywordMap({roadAddress, placeName, latitude, longitude}: KakaoKey
                     </div>)}
                 </>
             )}
-            <div className={"flex justify-between"}>
+            <div className={"flex justify-between py-2"}>
                 <button
-                    className="w-3/12 h-8 bg-blue-500 disabled:bg-gray-400 hover:bg-blue-600 px-5 py-2.5 rounded-md text-white font-semibold"
-                    onClick={ async () => {
-                        if(selectedPlace!==null){
-                            const result = await setUserAddress(selectedPlace);
-                            window.alert(result + "주소 업데이트")
-                        }
-                    }}
+                    className="w-3/12 h-8 bg-blue-500 disabled:bg-gray-400 hover:bg-blue-600 px-5 py-2.5 rounded-md text-white font-semibold "
+                    onClick={()=>{updateAddress()}}
                     disabled={selectedPlace === null}
                 >{"주소 저장"}
                 </button>
